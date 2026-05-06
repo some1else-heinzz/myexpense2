@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- fragment_onboard_page.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="@color/white">
+
+    <!-- Illustration Container -->
+    <FrameLayout
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_gravity="center">
+
+        <!-- Background Circle -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_circle_light_green" />
+
+        <!-- Image centered inside circle -->
+        <ImageView
+            android:id="@+id/iv_onboard_illustration"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="48dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/get_started_1"
+            android:contentDescription="Onboarding illustration" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tv_onboard_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/onboard1_title"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:gravity="center"
+        android:layout_marginTop="32dp" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/tv_onboard_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/onboard1_desc"
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        android:gravity="center"
+        android:layout_marginTop="12dp"
+        android:lineSpacingMultiplier="1.4" />
+
+</LinearLayout>

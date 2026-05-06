@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- dialog_add_category.xml  (also used for Edit Category — just change title) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/bg_dialog">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tv_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_category"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Category Name label -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/category_name"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Input -->
+    <EditText
+        android:id="@+id/et_category_name"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="@string/enter_category_name"
+        android:textSize="14sp"
+        android:textColorHint="@color/text_hint"
+        android:background="@drawable/bg_input_field"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:inputType="text"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/btn_save_category"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/save_category"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/green_btn" />
+
+</LinearLayout>

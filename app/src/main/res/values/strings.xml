@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyExpense</string>
+    <string name="app_subtitle">Budget Tracker</string>
+
+    <!-- Onboarding -->
+    <string name="onboard1_title">Start Your Journey to Better Finances</string>
+    <string name="onboard1_desc">Simple tools help you spend smarter and achieve your financial goals</string>
+    <string name="onboard2_title">Track Your Expenses Daily</string>
+    <string name="onboard2_desc">Add and organize your expenses in seconds. Keep everything simple and clear.</string>
+    <string name="onboard3_title">Set Budgets That Work</string>
+    <string name="onboard3_desc">Create budgets for different categories and manage your spending within limits</string>
+    <string name="lets_go">Let\'s Go!</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="get_started">Get Started</string>
+
+    <!-- Auth -->
+    <string name="take_control">Take Control of Your Money</string>
+    <string name="take_control_desc">Track expenses, set budgets, and stay on top of your finances.</string>
+    <string name="privacy_terms">By continuing, you agree to our Privacy Policy and Terms of Use</string>
+    <string name="already_have_account">Already have an account? Log in</string>
+    <string name="create_account">Create an Account</string>
+    <string name="lets_create">Let\'s create you a new account</string>
+    <string name="full_name">Full Name</string>
+    <string name="enter_full_name">Enter your full name</string>
+    <string name="email_address">Email Address</string>
+    <string name="enter_email">Enter your email address</string>
+    <string name="password">Password</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="confirm_password_hint">Confirm your password</string>
+    <string name="or_continue_with">or continue with</string>
+    <string name="continue_google">Continue with Google</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="login_subtitle">Log in to continue to track your expenses!</string>
+    <string name="username">Username</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Create Account? Sign up</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard">Dashboard</string>
+    <string name="track_desc">Track your expenses and stay on budget</string>
+    <string name="budget_overview">Budget Overview</string>
+    <string name="total_budget">Total Budget</string>
+    <string name="remaining">Remaining</string>
+    <string name="quick_actions">Quick Actions</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="record_new">Record new expenses</string>
+    <string name="recent_activities">Recent Activities</string>
+    <string name="budget_summary">Budget Summary</string>
+    <string name="budget_spent">Budget Spent</string>
+    <string name="add_budget">Add Budget</string>
+    <string name="view_all">View All</string>
+
+    <!-- Expense -->
+    <string name="expenses">Expenses</string>
+    <string name="date">Date</string>
+    <string name="category">Category</string>
+    <string name="description">Description</string>
+    <string name="amount">Amount</string>
+    <string name="payment_method">Payment method</string>
+    <string name="notes_optional">Notes (Optional)</string>
+    <string name="save_expense">Save Expense</string>
+    <string name="no_expenses_yet">No Expenses Yet</string>
+    <string name="no_expenses_desc">Start adding your first expense to track your spending</string>
+    <string name="edit_expense">Edit Expense</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="delete_expense">Delete Expense</string>
+    <string name="delete_confirm">Are you sure you want to delete this expense? This action cannot be undone.</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="total">Total: </string>
+
+    <!-- Budget -->
+    <string name="budget">Budget</string>
+    <string name="my_budgets">My budgets</string>
+    <string name="budget_amount">Budget Amount</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date_optional">End Date (Optional)</string>
+    <string name="save_budget">Save Budget</string>
+    <string name="set_your_budget">Set your budget</string>
+
+    <!-- Categories -->
+    <string name="categories">Categories</string>
+    <string name="your_categories">Your Categories</string>
+    <string name="add_category">Add Category</string>
+    <string name="category_name">Category Name</string>
+    <string name="enter_category_name">Enter Category Name</string>
+    <string name="save_category">Save Category</string>
+    <string name="edit_category">Edit Category</string>
+
+    <!-- Nav -->
+    <string name="nav_home">Home</string>
+    <string name="nav_expenses">Expenses</string>
+    <string name="nav_budget">Budget</string>
+    <string name="nav_more">More</string>
+
+    <!-- Filter chips -->
+    <string name="all">All</string>
+    <string name="food">Food</string>
+    <string name="transportation">Transportation</string>
+    <string name="payments">Payments</string>
+    <string name="miscellaneous">Miscellaneous</string>
+
+    <!-- Enter hints -->
+    <string name="enter_here">Enter here</string>
+
+    <!-- Error Messages -->
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_email">Please enter a valid email address</string>
+    <string name="error_password_too_short">Password must be at least 6 characters</string>
+    <string name="error_passwords_dont_match">Passwords do not match</string>
+    <string name="error_invalid_credentials">Invalid username or password</string>
+</resources>

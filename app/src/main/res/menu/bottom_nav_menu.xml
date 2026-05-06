@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/menu/bottom_nav_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/nav_home" />
+
+    <item
+        android:id="@+id/nav_expenses"
+        android:icon="@drawable/ic_expenses"
+        android:title="@string/nav_expenses" />
+
+    <item
+        android:id="@+id/nav_budget"
+        android:icon="@drawable/ic_budget"
+        android:title="@string/nav_budget" />
+
+    <item
+        android:id="@+id/nav_more"
+        android:icon="@drawable/ic_more"
+        android:title="@string/nav_more" />
+
+</menu>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- activity_welcome.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/white"
+    android:padding="32dp">
+
+    <!-- Logo row -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <!-- Illustration -->
+
+    <!-- Title -->
+
+    <!-- Description -->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:contentDescription="Welcome illustration"
+        android:scaleType="fitCenter"
+        android:src="@drawable/my_expense_logo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:gravity="center"
+        android:text="@string/take_control"
+        android:textColor="@color/text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- Get Started button -->
+
+    <!-- Privacy policy text -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.4"
+        android:text="@string/take_control_desc"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btn_get_started"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="@color/green_btn"
+        android:text="@string/get_started"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/privacy_terms"
+        android:textSize="11sp"
+        android:textColor="@color/text_secondary"
+        android:gravity="center"
+        android:layout_marginTop="12dp" />
+
+    <!-- Login link -->
+    <TextView
+        android:id="@+id/tv_login_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:minWidth="48dp"
+        android:gravity="center"
+        android:text="@string/already_have_account"
+        android:textSize="13sp"
+        android:textColor="@color/green_primary"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>
