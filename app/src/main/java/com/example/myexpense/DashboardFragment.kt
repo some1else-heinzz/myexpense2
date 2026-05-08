@@ -35,14 +35,14 @@ class DashboardFragment : Fragment() {
         )
 
         activities.forEachIndexed { index, expense ->
-            val rowView = layoutInflater.inflate(R.layout.item_expense, containerActivities, false)
-            rowView.findViewById<TextView>(R.id.tv_expense_name).text = expense.name
-            rowView.findViewById<TextView>(R.id.tv_expense_date).text = expense.date
-            rowView.findViewById<TextView>(R.id.tv_expense_category).text = expense.category
-            rowView.findViewById<TextView>(R.id.tv_expense_amount).text = expense.amount
+            val row = layoutInflater.inflate(R.layout.item_expense, containerActivities, false)
+            row.findViewById<TextView>(R.id.tv_expense_name).text = expense.name
+            row.findViewById<TextView>(R.id.tv_expense_date).text = expense.date
+            row.findViewById<TextView>(R.id.tv_expense_category).text = expense.category
+            row.findViewById<TextView>(R.id.tv_expense_amount).text = expense.amount
             
-            // Step 4: Add click listener to the specific row container
-            rowView.findViewById<View>(R.id.ll_expense_row).setOnClickListener {
+            // Step 4: Add click listener to start EditExpenseActivity for dashboard rows
+            row.setOnClickListener {
                 val intent = Intent(requireContext(), EditExpenseActivity::class.java)
                 intent.putExtra("EXPENSE_NAME", expense.name)
                 startActivity(intent)
@@ -50,10 +50,10 @@ class DashboardFragment : Fragment() {
 
             // Remove divider for the last item
             if (index == activities.size - 1) {
-                rowView.findViewById<View>(R.id.v_divider).visibility = View.GONE
+                row.findViewById<View>(R.id.v_divider).visibility = View.GONE
             }
             
-            containerActivities.addView(rowView)
+            containerActivities.addView(row)
         }
 
         return view

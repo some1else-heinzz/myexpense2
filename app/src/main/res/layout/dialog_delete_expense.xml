@@ -9,12 +9,20 @@
     android:background="@drawable/bg_dialog">
 
     <!-- Trash icon -->
-    <ImageView
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:src="@drawable/ic_delete"
-        android:contentDescription="Delete icon"
-        android:layout_marginBottom="16dp" />
+    <FrameLayout
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@drawable/bg_delete_circle"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="Delete"
+            android:tint="#D32F2F" />
+    </FrameLayout>
 
     <!-- Title -->
     <TextView
@@ -24,15 +32,16 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/text_primary"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="8dp" />
 
     <!-- Confirmation message -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation = "horizontal"
         android:text="@string/delete_confirm"
         android:textSize="13sp"
-        android:textColor="@color/text_secondary"
+        android:textColor="#757575"
         android:gravity="center"
         android:lineSpacingMultiplier="1.4"
         android:layout_marginBottom="24dp" />
@@ -51,7 +60,7 @@
             android:layout_weight="1"
             android:text="@string/cancel"
             android:textSize="14sp"
-            android:textColor="@color/text_primary"
+            android:textColor="#212121"
             android:backgroundTint="@color/divider"
             android:layout_marginEnd="8dp" />
 
