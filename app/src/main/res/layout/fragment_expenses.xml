@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- fragment_expenses.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -12,25 +12,24 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="16dp"
-        android:background="@color/white">
+        android:padding="24dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/expenses"
-            android:textSize="20sp"
+            android:text="Expenses"
+            android:textSize="32sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary" />
 
         <ImageView
             android:id="@+id/iv_search"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/ic_search"
-            android:contentDescription="Search"
-            android:padding="2dp" />
+            app:tint="@color/text_primary"
+            android:contentDescription="Search" />
     </LinearLayout>
 
     <!-- Filter Chips -->
@@ -38,167 +37,112 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
-        android:background="@color/white"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="10dp">
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:layout_marginBottom="16dp">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:singleSelection="true"
-            xmlns:app="http://schemas.android.com/apk/res-auto">
+            app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_all"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:text="@string/all"
-                android:textSize="13sp"
+                android:text="All"
                 style="@style/Widget.MaterialComponents.Chip.Choice" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_food"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:text="@string/food"
-                android:textSize="13sp"
+                android:text="Food"
                 style="@style/Widget.MaterialComponents.Chip.Choice" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_transportation"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:text="@string/transportation"
-                android:textSize="13sp"
+                android:text="Transportation"
                 style="@style/Widget.MaterialComponents.Chip.Choice" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_payments"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:text="@string/payments"
-                android:textSize="13sp"
+                android:text="Payments"
                 style="@style/Widget.MaterialComponents.Chip.Choice" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_miscellaneous"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:text="@string/miscellaneous"
-                android:textSize="13sp"
+                android:text="Miscellaneous"
                 style="@style/Widget.MaterialComponents.Chip.Choice" />
 
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-    <!-- Empty State -->
-    <LinearLayout
-        android:id="@+id/ll_empty_state"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="32dp"
-        android:visibility="gone">
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp">
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/ic_empty_wallet"
-            android:contentDescription="No expenses"
-            android:scaleType="fitCenter" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_expenses_yet"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:gravity="center"
-            android:layout_marginTop="16dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_expenses_desc"
-            android:textSize="13sp"
-            android:textColor="@color/text_secondary"
-            android:gravity="center"
-            android:layout_marginTop="8dp" />
-
-        <Button
-            android:id="@+id/btn_add_expense_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:text="@string/add_expense"
-            android:textSize="14sp"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/green_btn"
-            android:paddingStart="28dp"
-            android:paddingEnd="28dp"
-            android:layout_marginTop="24dp" />
-    </LinearLayout>
-
-    <!-- Expenses List -->
-    <LinearLayout
-        android:id="@+id/ll_expenses_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <!-- Month header + Total -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_month_header"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="April 2026"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary" />
+                android:orientation="horizontal"
+                android:padding="20dp">
 
-            <TextView
-                android:id="@+id/tv_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Total: ₱4,000.00"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="April 2026"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total: ₱4,000.00"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_expenses"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
         </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_expenses"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:clipToPadding="false" />
-    </LinearLayout>
-
-    <!-- FAB Add Expense -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_expense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
-        app:backgroundTint="@color/green_btn"
-        android:contentDescription="Add expense"
-        xmlns:app="http://schemas.android.com/apk/res-auto" />
+    <Button
+        android:id="@+id/btn_add_expense"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:text="Add Expense"
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/green_btn"
+        app:cornerRadius="16dp" />
 
 </LinearLayout>

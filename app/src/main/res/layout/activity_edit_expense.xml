@@ -204,19 +204,6 @@
                     android:inputType="textMultiLine"
                     android:layout_marginBottom="24dp" />
 
-                <!-- Delete Expense (text link) -->
-                <TextView
-                    android:id="@+id/tv_delete_expense"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/delete_expense"
-                    android:textSize="13sp"
-                    android:textColor="@color/red_delete"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="16dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-
                 <!-- Save Changes Button -->
                 <Button
                     android:id="@+id/btn_save_changes"
@@ -226,6 +213,18 @@
                     android:textSize="15sp"
                     android:textColor="@color/white"
                     android:backgroundTint="@color/green_btn" />
+
+                <!-- Delete Expense Button -->
+                <Button
+                    android:id="@+id/tv_delete_expense"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:text="@string/delete_expense"
+                    android:textSize="15sp"
+                    android:textColor="@color/green_btn"
+                    android:backgroundTint="@color/white"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_marginTop="12dp" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

@@ -1,228 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- activity_add_budget.xml -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:fillViewport="true">
+    android:orientation="vertical"
+    android:background="@color/background">
 
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp">
 
-        <!-- Header -->
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_back"
+            app:tint="@color/text_primary"
+            android:contentDescription="Back"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Budget"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="20dp">
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
 
-            <ImageView
-                android:id="@+id/iv_back"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_back"
-                android:contentDescription="Back"
-                android:padding="4dp"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/add_budget"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-
-        <!-- Form Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            xmlns:app="http://schemas.android.com/apk/res-auto">
-
-            <LinearLayout
+            <!-- Input Card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <!-- Category -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/category"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="6dp" />
-
-                <EditText
-                    android:id="@+id/et_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:hint="@string/enter_here"
-                    android:textSize="14sp"
-                    android:textColorHint="@color/text_hint"
-                    android:background="@drawable/bg_input_field"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:layout_marginBottom="14dp" />
-
-                <!-- Budget Amount -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/budget_amount"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="6dp" />
-
-                <EditText
-                    android:id="@+id/et_budget_amount"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:hint="@string/enter_here"
-                    android:textSize="14sp"
-                    android:textColorHint="@color/text_hint"
-                    android:background="@drawable/bg_input_field"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:inputType="numberDecimal"
-                    android:layout_marginBottom="14dp" />
-
-                <!-- Start Date -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="6dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/start_date"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
-                </LinearLayout>
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_input_field"
-                    android:layout_marginBottom="14dp">
-
-                    <TextView
-                        android:id="@+id/tv_start_date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="April 9, 2026"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_secondary"
-                        android:paddingStart="14dp" />
-
-                    <ImageView
-                        android:id="@+id/iv_start_date"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_calendar"
-                        android:contentDescription="Pick start date"
-                        android:layout_marginEnd="12dp"
-                        android:clickable="true"
-                        android:focusable="true" />
-                </LinearLayout>
-
-                <!-- End Date Optional -->
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/end_date_optional"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="6dp" />
+                    android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_input_field"
-                    android:layout_marginBottom="14dp">
-
-                    <TextView
-                        android:id="@+id/tv_end_date"
-                        android:layout_width="0dp"
+                    <!-- Category Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="April 9, 2026"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_secondary"
-                        android:paddingStart="14dp" />
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
 
-                    <ImageView
-                        android:id="@+id/iv_end_date"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_calendar"
-                        android:contentDescription="Pick end date"
-                        android:layout_marginEnd="12dp"
-                        android:clickable="true"
-                        android:focusable="true" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Category"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_primary" />
+
+                        <EditText
+                            android:id="@+id/et_category"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter here"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary"
+                            android:background="@null"
+                            android:gravity="end"
+                            android:minWidth="100dp" />
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
+
+                    <!-- Budget Amount Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Budget Amount"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_primary" />
+
+                        <EditText
+                            android:id="@+id/et_budget_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter here"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary"
+                            android:background="@null"
+                            android:gravity="end"
+                            android:minWidth="100dp"
+                            android:inputType="numberDecimal" />
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
+
+                    <!-- Start Date Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Start Date"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:id="@+id/tv_start_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="April 9, 2026"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginEnd="8dp" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_calendar"
+                            app:tint="@color/text_primary" />
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
+
+                    <!-- End Date Optional Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="End Date (Optional)"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:id="@+id/tv_end_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="April 9, 2026"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginEnd="8dp" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_calendar"
+                            app:tint="@color/text_primary" />
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
+
+                    <!-- Notes Optional Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="top">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Notes (Optional)"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_primary" />
+
+                        <EditText
+                            android:id="@+id/et_notes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter here"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary"
+                            android:background="@null"
+                            android:gravity="end"
+                            android:minWidth="100dp" />
+                    </LinearLayout>
+
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                <!-- Notes Optional -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/notes_optional"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="6dp" />
+            <Button
+                android:id="@+id/btn_save_budget"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:text="Save Budget"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/green_btn"
+                app:cornerRadius="16dp" />
 
-                <EditText
-                    android:id="@+id/et_notes"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:hint="@string/enter_here"
-                    android:textSize="14sp"
-                    android:textColorHint="@color/text_hint"
-                    android:background="@drawable/bg_input_field"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:paddingTop="12dp"
-                    android:gravity="top"
-                    android:inputType="textMultiLine"
-                    android:layout_marginBottom="24dp" />
+        </LinearLayout>
+    </ScrollView>
 
-                <!-- Save Budget Button -->
-                <Button
-                    android:id="@+id/btn_save_budget"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:text="@string/save_budget"
-                    android:textSize="15sp"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/green_btn" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

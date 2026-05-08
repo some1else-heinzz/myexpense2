@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ll_expense_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground">
+        android:background="?attr/selectableItemBackground">
 
-        <!-- Name and Date -->
+        <!-- Icon background circle -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_icon_circle_green"
+            android:layout_marginEnd="16dp">
+
+            <ImageView
+                android:id="@+id/iv_option_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                app:tint="@color/green_primary"
+                android:contentDescription="Option icon" />
+        </FrameLayout>
+
+        <!-- Text -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -23,56 +37,38 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_expense_name"
+                android:id="@+id/tv_option_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Groceries"
+                android:text="Title"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary" />
 
             <TextView
-                android:id="@+id/tv_expense_date"
+                android:id="@+id/tv_option_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="April 8, 2026"
+                android:text="Subtitle"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:layout_marginTop="2dp" />
         </LinearLayout>
 
-        <!-- Category (Middle) -->
-        <TextView
-            android:id="@+id/tv_expense_category"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Food"
-            android:textSize="14sp"
-            android:textColor="@color/text_primary"
-            android:gravity="center" />
-
-        <!-- Amount (Right) -->
-        <TextView
-            android:id="@+id/tv_expense_amount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="₱2,000.00"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:gravity="end" />
-
+        <!-- Arrow -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/text_secondary"
+            android:contentDescription="Arrow" />
     </LinearLayout>
 
-    <!-- Divider -->
     <View
         android:id="@+id/v_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/divider"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginStart="72dp" />
 
 </LinearLayout>
