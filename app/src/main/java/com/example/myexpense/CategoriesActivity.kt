@@ -45,6 +45,8 @@ class CategoriesActivity : AppCompatActivity() {
             onEditClick = { category ->
                 val intent = Intent(this, EditCategoryActivity::class.java)
                 intent.putExtra("CATEGORY_NAME", category.name)
+                intent.putExtra("CATEGORY_ICON", category.iconResName)
+                intent.putExtra("CATEGORY_COLOR", category.colorHex)
                 startActivity(intent)
             },
             onDeleteClick = { category ->

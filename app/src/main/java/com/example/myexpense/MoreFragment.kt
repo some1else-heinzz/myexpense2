@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -26,34 +27,46 @@ class MoreFragment : Fragment() {
         val accountGroup = view.findViewById<LinearLayout>(R.id.ll_account_group)
         val manageGroup = view.findViewById<LinearLayout>(R.id.ll_manage_group)
         val prefGroup = view.findViewById<LinearLayout>(R.id.ll_preferences_group)
-        val supportGroup = view.findViewById<LinearLayout>(R.id.ll_support_group)
 
         // Account Section
-        addOption(accountGroup, R.drawable.ic_person, "Profile", "Edit name and password") {
+        addOption(accountGroup, R.drawable.ic_person, "Profile", "Edit name and password", isLast = true) {
             startActivity(Intent(requireContext(), ProfileActivity::class.java))
-        }
-        addOption(accountGroup, R.drawable.ic_logout, "Logout", "Sign out of your account", isLast = true) {
-            showLogoutDialog()
         }
 
         // Manage Section
         addOption(manageGroup, R.drawable.ic_categories, "Categories", "Manage expense categories") {
             startActivity(Intent(requireContext(), CategoriesActivity::class.java))
         }
-        addOption(manageGroup, R.drawable.ic_payment, "Payment Methods", "Manage your payment methods")
-        addOption(manageGroup, R.drawable.ic_budget, "Budgets", "View and manage your budgets", isLast = true)
+        addOption(manageGroup, R.drawable.ic_budget, "Budgets", "View and manage your budgets", isLast = true) {
+            (requireActivity() as? DashboardActivity)?.selectTab(R.id.nav_budget)
+        }
 
         // Preferences Section
-        addOption(prefGroup, R.drawable.ic_currency, "Currency", "USD - US Dollar")
-        addOption(prefGroup, R.drawable.ic_date, "Date Format", "MM/DD/YYYY")
-        addOption(prefGroup, R.drawable.ic_theme, "Theme", "Light", isLast = true)
+        val currentFormat = session.getDateFormat()
+        addOption(prefGroup, R.drawable.ic_date, "Date Format", currentFormat, isLast = true) {
+            showDateFormatDialog()
+        }
 
-        // Support Section
-        addOption(supportGroup, R.drawable.ic_help, "Help & FAQ", "Get help and find answers")
-        addOption(supportGroup, R.drawable.ic_contact, "Contact Us", "We'd love to hear from you")
-        addOption(supportGroup, R.drawable.ic_about, "About", "Version 1.0.0", isLast = true)
+        // Logout Button at the bottom
+        view.findViewById<Button>(R.id.btn_logout_bottom).setOnClickListener {
+            showLogoutDialog()
+        }
 
         return view
+    }
+
+    private fun showDateFormatDialog() {
+        val formats = arrayOf("MMMM d, yyyy", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd")
+        
+        AlertDialog.Builder(requireContext())
+            .setTitle("Choose Date Format")
+            .setItems(formats) { _, which ->
+                val selectedFormat = formats[which]
+                session.setDateFormat(selectedFormat)
+                // Refresh the fragment to show new subtitle
+                parentFragmentManager.beginTransaction().replace(R.id.fragment_container, MoreFragment()).commit()
+            }
+            .show()
     }
 
     private fun showLogoutDialog() {
@@ -76,10 +89,14 @@ class MoreFragment : Fragment() {
         title: String,
         subtitle: String,
         isLast: Boolean = false,
+        iconColorRes: Int = R.color.green_primary,
         onClick: (() -> Unit)? = null
     ) {
         val view = layoutInflater.inflate(R.layout.item_more_option, parent, false)
-        view.findViewById<ImageView>(R.id.iv_option_icon).setImageResource(iconRes)
+        val ivIcon = view.findViewById<ImageView>(R.id.iv_option_icon)
+        ivIcon.setImageResource(iconRes)
+        ivIcon.setColorFilter(resources.getColor(iconColorRes, null))
+
         view.findViewById<TextView>(R.id.tv_option_title).text = title
         view.findViewById<TextView>(R.id.tv_option_subtitle).text = subtitle
         

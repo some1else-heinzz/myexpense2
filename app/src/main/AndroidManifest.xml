@@ -41,6 +41,9 @@
         <activity android:name=".EditExpenseActivity" android:exported="false" />
         <activity android:name=".ProfileActivity" android:exported="false" />
         <activity android:name=".ExpenseDetailsActivity" android:exported="false" />
+        <activity android:name=".BudgetDetailsActivity" android:exported="false" />
+        <activity android:name=".EditBudgetActivity" android:exported="false" />
+        <activity android:name=".NotificationActivity" android:exported="false" />
     </application>
 
 </manifest>

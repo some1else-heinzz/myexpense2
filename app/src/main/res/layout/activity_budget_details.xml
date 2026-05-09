@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Expense Details"
+            android:text="Budget Details"
             android:textSize="32sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary" />
@@ -93,84 +93,12 @@
                             android:textColor="@color/text_primary" />
 
                         <TextView
-                            android:id="@+id/tv_detail_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Expense Name"
-                            android:textSize="16sp"
-                            android:textColor="@color/text_secondary"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
-
-                    <!-- Date Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Date"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_secondary" />
-                        <TextView
-                            android:id="@+id/tv_detail_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="April 9, 2026"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_primary" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
-
-                    <!-- Category Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Category"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_secondary" />
-                        <TextView
                             android:id="@+id/tv_detail_category"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Food"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_primary" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
-
-                    <!-- Notes Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Notes"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_secondary" />
-                        <TextView
-                            android:id="@+id/tv_detail_notes"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="No notes provided"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_primary"
+                            android:text="Category Name"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_secondary"
                             android:layout_marginTop="4dp" />
                     </LinearLayout>
 
@@ -179,11 +107,11 @@
 
             <!-- Action Buttons -->
             <Button
-                android:id="@+id/btn_edit_expense"
+                android:id="@+id/btn_edit_budget"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="32dp"
-                android:text="Edit Expense"
+                android:text="Edit Budget"
                 android:textAllCaps="false"
                 android:textSize="18sp"
                 android:textColor="@color/white"
@@ -191,12 +119,12 @@
                 app:cornerRadius="16dp" />
 
             <Button
-                android:id="@+id/btn_delete_expense"
+                android:id="@+id/btn_delete_budget"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="24dp"
-                android:text="Delete Expense"
+                android:text="Delete Budget"
                 android:textAllCaps="false"
                 android:textSize="18sp"
                 android:textColor="@color/green_btn"

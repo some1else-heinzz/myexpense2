@@ -13,7 +13,25 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="16dp">
+        android:padding="12dp">
+
+        <!-- Category Icon Circle -->
+        <FrameLayout
+            android:id="@+id/fl_category_icon_bg"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_icon_circle_green"
+            android:layout_marginEnd="16dp">
+
+            <ImageView
+                android:id="@+id/iv_category_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_food"
+                app:tint="@color/green_primary"
+                android:contentDescription="Category Icon" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tv_category_name"
@@ -29,7 +47,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_edit"
-            app:tint="@color/text_primary"
+            app:tint="@color/text_secondary"
             android:layout_marginEnd="16dp"
             android:padding="2dp"
             android:contentDescription="Edit Category"

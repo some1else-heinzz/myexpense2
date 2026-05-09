@@ -10,11 +10,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.Locale
 
 class BudgetFragment : Fragment() {
 
     private lateinit var db: DatabaseHelper
     private lateinit var session: SessionManager
+    private lateinit var rvBudgets: RecyclerView
+    private lateinit var tvTotalBudget: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,25 +29,29 @@ class BudgetFragment : Fragment() {
         db = DatabaseHelper(requireContext())
         session = SessionManager(requireContext())
 
-        val rvBudgets = view.findViewById<RecyclerView>(R.id.rv_budgets)
+        rvBudgets = view.findViewById(R.id.rv_budgets)
+        tvTotalBudget = view.findViewById(R.id.tv_total_budget)
         rvBudgets.layoutManager = LinearLayoutManager(context)
-
-        val userId = session.getUserId()
-        val budgets = db.getBudgets(userId)
-        val totalBudget = budgets.sumOf { it.amount.replace("₱", "").replace("P", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
-        
-        view.findViewById<TextView>(R.id.tv_total_budget).text = "₱$totalBudget"
-
-        if (budgets.isEmpty()) {
-            // Optional: Add empty state for budget
-        } else {
-            rvBudgets.adapter = BudgetAdapter(budgets)
-        }
 
         view.findViewById<ImageView>(R.id.iv_add_budget).setOnClickListener {
             startActivity(Intent(requireContext(), AddBudgetActivity::class.java))
         }
 
         return view
+    }
+
+    private fun loadBudgetData() {
+        val userId = session.getUserId()
+        val budgets = db.getBudgets(userId)
+        
+        val totalBudget = budgets.sumOf { it.amount.replace("₱", "").replace("P", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
+        tvTotalBudget.text = "₱${String.format(Locale.getDefault(), "%,.1f", totalBudget)}"
+
+        rvBudgets.adapter = BudgetAdapter(budgets)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadBudgetData()
     }
 }

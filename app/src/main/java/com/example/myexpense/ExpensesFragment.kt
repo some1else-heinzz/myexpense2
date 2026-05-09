@@ -1,11 +1,18 @@
 package com.example.myexpense
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -22,9 +29,13 @@ class ExpensesFragment : Fragment() {
     private lateinit var llEmptyState: LinearLayout
     private lateinit var nsvExpenseList: View
     private lateinit var chipGroup: ChipGroup
+    private lateinit var llSearchBar: View
+    private lateinit var etSearch: EditText
 
     private var currentFilter: String = "All"
-    private val inputDateFormat = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
+    private var searchQuery: String = ""
+    
+    private val legacyFormat = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
     private val monthYearFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
 
     override fun onCreateView(
@@ -41,9 +52,32 @@ class ExpensesFragment : Fragment() {
         llEmptyState = view.findViewById(R.id.ll_empty_state)
         nsvExpenseList = view.findViewById(R.id.nsv_expense_list)
         chipGroup = view.findViewById(R.id.chip_group_filter)
+        llSearchBar = view.findViewById(R.id.ll_search_bar)
+        etSearch = view.findViewById(R.id.et_search)
 
         setupCategoryChips()
-        loadExpenses(currentFilter)
+        loadExpenses()
+
+        view.findViewById<ImageView>(R.id.iv_search).setOnClickListener {
+            if (llSearchBar.visibility == View.VISIBLE) {
+                llSearchBar.visibility = View.GONE
+                etSearch.text.clear()
+                searchQuery = ""
+                loadExpenses()
+            } else {
+                llSearchBar.visibility = View.VISIBLE
+                etSearch.requestFocus()
+            }
+        }
+
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchQuery = s.toString()
+                loadExpenses()
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         view.findViewById<Button>(R.id.btn_add_expense).setOnClickListener {
             startActivity(Intent(requireContext(), AddExpenseActivity::class.java))
@@ -56,55 +90,74 @@ class ExpensesFragment : Fragment() {
         val userId = session.getUserId()
         val categories = db.getCategories(userId)
 
-        val allChip = chipGroup.findViewById<Chip>(R.id.chip_all)
         chipGroup.removeAllViews()
+        
+        val allChip = layoutInflater.inflate(R.layout.layout_chip_item, chipGroup, false) as Chip
+        allChip.text = "All"
+        allChip.id = View.generateViewId()
+        allChip.isChecked = (currentFilter == "All")
+        allChip.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                currentFilter = "All"
+                loadExpenses()
+            }
+        }
         chipGroup.addView(allChip)
 
         for (category in categories) {
             val chip = layoutInflater.inflate(R.layout.layout_chip_item, chipGroup, false) as Chip
             chip.text = category.name
             chip.id = View.generateViewId()
+            chip.isChecked = (currentFilter == category.name)
             chip.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     currentFilter = category.name
-                    loadExpenses(currentFilter)
+                    loadExpenses()
                 }
             }
             chipGroup.addView(chip)
         }
-
-        allChip.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                currentFilter = "All"
-                loadExpenses(currentFilter)
-            }
-        }
     }
 
-    private fun loadExpenses(category: String) {
+    private fun loadExpenses() {
         val userId = session.getUserId()
-        val expenses = db.getExpenses(userId, if (category == "All") null else category)
+        // Get expenses from DB based on category filter
+        val allExpenses = db.getExpenses(userId, if (currentFilter == "All") null else currentFilter)
+        
+        // Filter by search query locally
+        val filteredExpenses = if (searchQuery.isEmpty()) {
+            allExpenses
+        } else {
+            allExpenses.filter { it.name.contains(searchQuery, ignoreCase = true) }
+        }
+
+        val categories = db.getCategories(userId).associateBy { it.name }
+        val targetFormat = SimpleDateFormat(session.getDateFormat(), Locale.getDefault())
 
         llMonthCardsContainer.removeAllViews()
 
-        if (expenses.isEmpty()) {
+        if (filteredExpenses.isEmpty()) {
             llEmptyState.visibility = View.VISIBLE
             nsvExpenseList.visibility = View.GONE
+            val tvEmptyDesc = llEmptyState.findViewById<TextView>(R.id.tv_empty_desc)
+            if (searchQuery.isNotEmpty()) {
+                tvEmptyDesc.text = "No expenses match \"$searchQuery\""
+            } else {
+                tvEmptyDesc.text = "Start adding your first expense to track your spending."
+            }
         } else {
             llEmptyState.visibility = View.GONE
             nsvExpenseList.visibility = View.VISIBLE
 
-            // Group expenses by Month Year
-            val groupedExpenses = expenses.groupBy { expense ->
+            val groupedExpenses = filteredExpenses.groupBy { expense ->
                 try {
-                    val date = inputDateFormat.parse(expense.date)
+                    val date = legacyFormat.parse(expense.date)
                     if (date != null) monthYearFormat.format(date) else "Unknown Date"
                 } catch (e: Exception) {
                     "Unknown Date"
                 }
             }
 
-            // Create a card for each month
             for ((monthYear, monthExpenses) in groupedExpenses) {
                 val monthCardView = layoutInflater.inflate(R.layout.item_month_card, llMonthCardsContainer, false)
                 val tvMonthHeader = monthCardView.findViewById<TextView>(R.id.tv_month_header)
@@ -115,17 +168,41 @@ class ExpensesFragment : Fragment() {
                 
                 var totalAmount = 0.0
                 monthExpenses.forEachIndexed { index, expense ->
-                    // Calculate total
                     val amount = expense.amount.replace("₱", "").replace(",", "").toDoubleOrNull() ?: 0.0
                     totalAmount += amount
 
-                    // Inflate individual expense row
                     val rowView = layoutInflater.inflate(R.layout.item_expense, llItemsContainer, false)
                     rowView.findViewById<TextView>(R.id.tv_expense_name).text = expense.name
-                    rowView.findViewById<TextView>(R.id.tv_expense_date).text = expense.date
+                    
+                    val displayDate = try {
+                        val date = legacyFormat.parse(expense.date)
+                        if (date != null) targetFormat.format(date) else expense.date
+                    } catch (e: Exception) {
+                        expense.date
+                    }
+                    rowView.findViewById<TextView>(R.id.tv_expense_date).text = displayDate
                     rowView.findViewById<TextView>(R.id.tv_expense_category).text = expense.category
                     rowView.findViewById<TextView>(R.id.tv_expense_amount).text = expense.amount
                     
+                    val catInfo = categories[expense.category]
+                    if (catInfo != null) {
+                        val ivIcon = rowView.findViewById<ImageView>(R.id.iv_expense_category_icon)
+                        val flIconBg = rowView.findViewById<FrameLayout>(R.id.fl_expense_icon_bg)
+                        
+                        val resId = resources.getIdentifier(catInfo.iconResName, "drawable", requireContext().packageName)
+                        if (resId != 0) ivIcon.setImageResource(resId)
+                        
+                        try {
+                            val color = Color.parseColor(catInfo.colorHex)
+                            ivIcon.setColorFilter(color)
+                            val alphaColor = Color.argb(30, Color.red(color), Color.green(color), Color.blue(color))
+                            val shape = GradientDrawable()
+                            shape.shape = GradientDrawable.OVAL
+                            shape.setColor(alphaColor)
+                            flIconBg.background = shape
+                        } catch (e: Exception) {}
+                    }
+
                     rowView.findViewById<View>(R.id.ll_expense_row).setOnClickListener {
                         val intent = Intent(requireContext(), ExpenseDetailsActivity::class.java)
                         intent.putExtra("EXPENSE_ID", expense.id)
@@ -137,7 +214,6 @@ class ExpensesFragment : Fragment() {
                         startActivity(intent)
                     }
 
-                    // Divider visibility
                     if (index == monthExpenses.size - 1) {
                         rowView.findViewById<View>(R.id.v_divider).visibility = View.GONE
                     }
@@ -154,6 +230,6 @@ class ExpensesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         setupCategoryChips()
-        loadExpenses(currentFilter)
+        loadExpenses()
     }
 }

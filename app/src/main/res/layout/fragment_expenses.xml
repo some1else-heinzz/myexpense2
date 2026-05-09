@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:fitsSystemWindows="true">
 
     <!-- Header -->
     <LinearLayout
@@ -29,7 +30,35 @@
             android:layout_height="32dp"
             android:src="@drawable/ic_search"
             app:tint="@color/text_primary"
-            android:contentDescription="Search" />
+            android:contentDescription="Search"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+    </LinearLayout>
+
+    <!-- Search Bar (Initially Hidden) -->
+    <LinearLayout
+        android:id="@+id/ll_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="16dp"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Search expenses..."
+            android:textSize="14sp"
+            android:background="@drawable/bg_input_field"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:inputType="text"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="12dp"
+            android:drawableTint="@color/text_secondary" />
     </LinearLayout>
 
     <!-- Filter Chips -->
@@ -92,6 +121,7 @@
                 android:layout_marginTop="16dp" />
 
             <TextView
+                android:id="@+id/tv_empty_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Start adding your first expense to track\nyour spending."

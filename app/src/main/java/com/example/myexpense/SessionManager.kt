@@ -12,7 +12,15 @@ class SessionManager(context: Context) {
         private const val KEY_USERNAME = "username"
         private const val KEY_FULLNAME = "fullname"
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
+        private const val KEY_DATE_FORMAT = "date_format"
+        const val DEFAULT_DATE_FORMAT = "MMMM d, yyyy"
     }
+
+    fun setDateFormat(format: String) {
+        prefs.edit().putString(KEY_DATE_FORMAT, format).apply()
+    }
+
+    fun getDateFormat(): String = prefs.getString(KEY_DATE_FORMAT, DEFAULT_DATE_FORMAT) ?: DEFAULT_DATE_FORMAT
 
     fun createSession(user: User) {
         val editor = prefs.edit()

@@ -2,9 +2,12 @@ package com.example.myexpense
 
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -47,6 +50,28 @@ class ExpenseDetailsActivity : AppCompatActivity() {
             tvNotes.text = expenseNotes
         } else {
             tvNotes.text = "No notes provided"
+        }
+
+        // Set Icon
+        val userId = session.getUserId()
+        val categories = db.getCategories(userId).associateBy { it.name }
+        val catInfo = categories[expenseCategory]
+        if (catInfo != null) {
+            val ivIcon = findViewById<ImageView>(R.id.iv_preview_icon)
+            val flIconBg = findViewById<FrameLayout>(R.id.fl_preview_bg)
+            
+            val resId = resources.getIdentifier(catInfo.iconResName, "drawable", packageName)
+            if (resId != 0) ivIcon.setImageResource(resId)
+            
+            try {
+                val color = Color.parseColor(catInfo.colorHex)
+                ivIcon.setColorFilter(color)
+                val alphaColor = Color.argb(30, Color.red(color), Color.green(color), Color.blue(color))
+                val shape = GradientDrawable()
+                shape.shape = GradientDrawable.OVAL
+                shape.setColor(alphaColor)
+                flIconBg.background = shape
+            } catch (e: Exception) {}
         }
 
         findViewById<ImageView>(R.id.iv_back).setOnClickListener {

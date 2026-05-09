@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.switchmaterial.SwitchMaterial
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -35,8 +36,9 @@ class AddExpenseActivity : AppCompatActivity() {
         val etCategory = findViewById<AutoCompleteTextView>(R.id.et_category)
         val etDescription = findViewById<EditText>(R.id.et_description)
         val etAmount = findViewById<EditText>(R.id.et_amount)
-        val etPayment = findViewById<EditText>(R.id.et_payment_method)
         val etNotes = findViewById<EditText>(R.id.et_notes)
+        val swFavorite = findViewById<SwitchMaterial>(R.id.sw_favorite)
+        val swRecurring = findViewById<SwitchMaterial>(R.id.sw_recurring)
         val ivCalendar = findViewById<ImageView>(R.id.iv_calendar)
 
         // Set current date by default
@@ -64,7 +66,6 @@ class AddExpenseActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
         etCategory.setAdapter(adapter)
         
-        // Show dropdown immediately on click
         etCategory.setOnClickListener {
             etCategory.showDropDown()
         }
@@ -89,7 +90,18 @@ class AddExpenseActivity : AppCompatActivity() {
                 )
                 
                 if (db.addExpense(userId, expense)) {
+                    // Save as Favorite if toggled
+                    if (swFavorite.isChecked) {
+                        db.addTemplate(userId, description, category, "₱$amountStr")
+                    }
+
+                    // Save as Recurring if toggled
+                    if (swRecurring.isChecked) {
+                        db.addRecurring(userId, description, category, "₱$amountStr")
+                    }
+
                     Toast.makeText(this, "Expense saved", Toast.LENGTH_SHORT).show()
+                    checkBudgetThreshold(userId, category)
                     finish()
                 } else {
                     Toast.makeText(this, "Failed to save expense", Toast.LENGTH_SHORT).show()
@@ -104,6 +116,24 @@ class AddExpenseActivity : AppCompatActivity() {
                 showDiscardDialog()
             }
         })
+    }
+
+    private fun checkBudgetThreshold(userId: Int, category: String) {
+        val budget = db.getBudgets(userId).find { it.category == category } ?: return
+        val budgetAmount = budget.amount.replace("₱", "").replace("P", "").replace(",", "").toDoubleOrNull() ?: 0.0
+        if (budgetAmount <= 0) return
+
+        val currentMonth = SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
+        val allExpenses = db.getExpenses(userId, category)
+        val monthSpent = allExpenses.filter { it.date.contains(currentMonth.split(" ")[0]) && it.date.contains(currentMonth.split(" ")[1]) }
+            .sumOf { it.amount.replace("₱", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
+
+        val ratio = monthSpent / budgetAmount
+        if (ratio >= 1.0) {
+            Toast.makeText(this, "ALERT: You have EXCEEDED your $category budget!", Toast.LENGTH_LONG).show()
+        } else if (ratio >= 0.8) {
+            Toast.makeText(this, "WARNING: You have used 80% of your $category budget.", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun showDiscardDialog() {

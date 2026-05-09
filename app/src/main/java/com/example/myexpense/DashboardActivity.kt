@@ -40,6 +40,10 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
+    fun selectTab(itemId: Int) {
+        findViewById<BottomNavigationView>(R.id.bottom_nav).selectedItemId = itemId
+    }
+
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
