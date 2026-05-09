@@ -8,9 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 
 class MoreFragment : Fragment() {
+
+    private lateinit var session: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -18,10 +21,20 @@ class MoreFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_more, container, false)
+        session = SessionManager(requireContext())
 
+        val accountGroup = view.findViewById<LinearLayout>(R.id.ll_account_group)
         val manageGroup = view.findViewById<LinearLayout>(R.id.ll_manage_group)
         val prefGroup = view.findViewById<LinearLayout>(R.id.ll_preferences_group)
         val supportGroup = view.findViewById<LinearLayout>(R.id.ll_support_group)
+
+        // Account Section
+        addOption(accountGroup, R.drawable.ic_person, "Profile", "Edit name and password") {
+            startActivity(Intent(requireContext(), ProfileActivity::class.java))
+        }
+        addOption(accountGroup, R.drawable.ic_logout, "Logout", "Sign out of your account", isLast = true) {
+            showLogoutDialog()
+        }
 
         // Manage Section
         addOption(manageGroup, R.drawable.ic_categories, "Categories", "Manage expense categories") {
@@ -41,6 +54,20 @@ class MoreFragment : Fragment() {
         addOption(supportGroup, R.drawable.ic_about, "About", "Version 1.0.0", isLast = true)
 
         return view
+    }
+
+    private fun showLogoutDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Logout") { _, _ ->
+                session.logout()
+                val intent = Intent(requireContext(), LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun addOption(

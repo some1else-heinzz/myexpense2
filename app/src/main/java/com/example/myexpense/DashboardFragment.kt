@@ -60,8 +60,10 @@ class DashboardFragment : Fragment() {
                 
                 rowView.findViewById<View>(R.id.ll_expense_row).setOnClickListener {
                     val intent = Intent(requireContext(), EditExpenseActivity::class.java)
+                    intent.putExtra("EXPENSE_ID", expense.id)
                     intent.putExtra("EXPENSE_NAME", expense.name)
                     intent.putExtra("EXPENSE_AMOUNT", expense.amount)
+                    intent.putExtra("EXPENSE_CATEGORY", expense.category)
                     startActivity(intent)
                 }
 

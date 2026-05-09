@@ -106,16 +106,20 @@
                             android:textSize="12sp"
                             android:textColor="@color/text_primary" />
 
-                        <EditText
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/et_category"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:hint="Enter here"
+                            android:hint="Select"
                             android:textSize="14sp"
                             android:textColor="@color/text_primary"
                             android:background="@null"
                             android:gravity="end"
-                            android:minWidth="100dp" />
+                            android:minWidth="120dp"
+                            android:focusable="false"
+                            android:clickable="true"
+                            android:cursorVisible="false"
+                            android:inputType="none" />
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />

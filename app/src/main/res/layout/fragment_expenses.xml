@@ -45,41 +45,15 @@
             android:id="@+id/chip_group_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:singleSelection="true">
+            app:singleSelection="true"
+            app:selectionRequired="true">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_all"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:text="All"
-                style="@style/Widget.MaterialComponents.Chip.Choice" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_food"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:text="Food"
-                style="@style/Widget.MaterialComponents.Chip.Choice" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_transportation"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:text="Transportation"
-                style="@style/Widget.MaterialComponents.Chip.Choice" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_payments"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:text="Payments"
-                style="@style/Widget.MaterialComponents.Chip.Choice" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_miscellaneous"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:text="Miscellaneous"
+                android:checked="true"
                 style="@style/Widget.MaterialComponents.Chip.Choice" />
 
         </com.google.android.material.chip.ChipGroup>

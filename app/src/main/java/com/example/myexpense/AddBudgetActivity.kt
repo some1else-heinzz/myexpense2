@@ -1,6 +1,8 @@
 package com.example.myexpense
 
 import android.os.Bundle
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -21,8 +23,14 @@ class AddBudgetActivity : AppCompatActivity() {
         db = DatabaseHelper(this)
         session = SessionManager(this)
 
-        val etCategory = findViewById<EditText>(R.id.et_category)
+        val etCategory = findViewById<AutoCompleteTextView>(R.id.et_category)
         val etAmount = findViewById<EditText>(R.id.et_budget_amount)
+
+        // Populate Category Selection
+        val userId = session.getUserId()
+        val categories = db.getCategories(userId).map { it.name }
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
+        etCategory.setAdapter(adapter)
 
         findViewById<ImageView>(R.id.iv_back).setOnClickListener {
             showDiscardDialog()
@@ -38,7 +46,6 @@ class AddBudgetActivity : AppCompatActivity() {
                     amount = "₱$amountStr"
                 )
                 
-                val userId = session.getUserId()
                 if (db.addBudget(userId, budget)) {
                     Toast.makeText(this, "Budget saved", Toast.LENGTH_SHORT).show()
                     finish()

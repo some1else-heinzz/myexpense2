@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Budget"
+            android:text="Profile"
             android:textSize="32sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary" />
@@ -43,7 +43,7 @@
             android:paddingStart="24dp"
             android:paddingEnd="24dp">
 
-            <!-- Input Card -->
+            <!-- Profile Info Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Category Row -->
+                    <!-- Username (Read-only) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -68,26 +68,22 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Category"
+                            android:text="Username"
                             android:textSize="12sp"
                             android:textColor="@color/text_primary" />
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/et_category"
+                        <TextView
+                            android:id="@+id/tv_username"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:hint="Select"
+                            android:text="user@example.com"
                             android:textSize="14sp"
-                            android:textColor="@color/text_primary"
-                            android:background="@null"
-                            android:gravity="end"
-                            android:minWidth="120dp"
-                            android:inputType="none" />
+                            android:textColor="@color/text_secondary" />
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
 
-                    <!-- Budget Amount Row -->
+                    <!-- Full Name -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -99,114 +95,15 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Budget Amount"
+                            android:text="Full Name"
                             android:textSize="12sp"
                             android:textColor="@color/text_primary" />
 
                         <EditText
-                            android:id="@+id/et_budget_amount"
+                            android:id="@+id/et_full_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:hint="Enter here"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_primary"
-                            android:background="@null"
-                            android:gravity="end"
-                            android:minWidth="100dp"
-                            android:inputType="numberDecimal" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
-
-                    <!-- Start Date Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Start Date"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_primary" />
-
-                        <TextView
-                            android:id="@+id/tv_start_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="April 9, 2026"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginEnd="8dp" />
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_calendar"
-                            app:tint="@color/text_primary" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
-
-                    <!-- End Date Optional Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="End Date (Optional)"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_primary" />
-
-                        <TextView
-                            android:id="@+id/tv_end_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="April 9, 2026"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginEnd="8dp" />
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_calendar"
-                            app:tint="@color/text_primary" />
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
-
-                    <!-- Notes Optional Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:gravity="top">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Notes (Optional)"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_primary" />
-
-                        <EditText
-                            android:id="@+id/et_notes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:hint="Enter here"
+                            android:hint="Enter Name"
                             android:textSize="14sp"
                             android:textColor="@color/text_primary"
                             android:background="@null"
@@ -214,15 +111,46 @@
                             android:minWidth="100dp" />
                     </LinearLayout>
 
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider" />
+
+                    <!-- Password -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Password"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_primary" />
+
+                        <EditText
+                            android:id="@+id/et_password"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="••••••"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary"
+                            android:background="@null"
+                            android:gravity="end"
+                            android:minWidth="100dp"
+                            android:inputType="textPassword" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/btn_save_budget"
+                android:id="@+id/btn_save_profile"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="32dp"
-                android:text="Save Budget"
+                android:text="Update Profile"
                 android:textAllCaps="false"
                 android:textSize="18sp"
                 android:textColor="@color/white"
