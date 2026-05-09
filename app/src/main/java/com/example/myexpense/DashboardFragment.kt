@@ -14,6 +14,10 @@ class DashboardFragment : Fragment() {
 
     private lateinit var db: DatabaseHelper
     private lateinit var session: SessionManager
+    private lateinit var containerActivities: LinearLayout
+    private lateinit var tvTotalBudget: TextView
+    private lateinit var tvRemaining: TextView
+    private lateinit var tvWelcome: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,11 +29,10 @@ class DashboardFragment : Fragment() {
         db = DatabaseHelper(requireContext())
         session = SessionManager(requireContext())
 
-        val tvWelcome = view.findViewById<TextView>(R.id.tv_welcome_title)
-        val fullName = session.getFullName() ?: "User"
-        tvWelcome.text = "Welcome back, $fullName"
-
-        val containerActivities = view.findViewById<LinearLayout>(R.id.ll_recent_activities)
+        tvWelcome = view.findViewById(R.id.tv_welcome_title)
+        containerActivities = view.findViewById(R.id.ll_recent_activities)
+        tvTotalBudget = view.findViewById(R.id.tv_total_budget)
+        tvRemaining = view.findViewById(R.id.tv_remaining)
 
         view.findViewById<CardView>(R.id.card_add_expense).setOnClickListener {
             startActivity(Intent(requireContext(), AddExpenseActivity::class.java))
@@ -39,18 +42,29 @@ class DashboardFragment : Fragment() {
             startActivity(Intent(requireContext(), AddBudgetActivity::class.java))
         }
 
+        return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadDashboardData()
+    }
+
+    private fun loadDashboardData() {
+        val fullName = session.getFullName() ?: "User"
+        tvWelcome.text = "Welcome back, $fullName"
+
         val userId = session.getUserId()
         val activities = db.getExpenses(userId)
 
+        containerActivities.removeAllViews()
         if (activities.isEmpty()) {
-            containerActivities.removeAllViews()
             val emptyText = TextView(requireContext())
             emptyText.text = "No recent activities"
             emptyText.setPadding(32, 32, 32, 32)
             emptyText.gravity = android.view.Gravity.CENTER
             containerActivities.addView(emptyText)
         } else {
-            containerActivities.removeAllViews()
             activities.take(4).forEachIndexed { index, expense ->
                 val rowView = layoutInflater.inflate(R.layout.item_expense, containerActivities, false)
                 rowView.findViewById<TextView>(R.id.tv_expense_name).text = expense.name
@@ -59,11 +73,13 @@ class DashboardFragment : Fragment() {
                 rowView.findViewById<TextView>(R.id.tv_expense_amount).text = expense.amount
                 
                 rowView.findViewById<View>(R.id.ll_expense_row).setOnClickListener {
-                    val intent = Intent(requireContext(), EditExpenseActivity::class.java)
+                    val intent = Intent(requireContext(), ExpenseDetailsActivity::class.java)
                     intent.putExtra("EXPENSE_ID", expense.id)
                     intent.putExtra("EXPENSE_NAME", expense.name)
                     intent.putExtra("EXPENSE_AMOUNT", expense.amount)
                     intent.putExtra("EXPENSE_CATEGORY", expense.category)
+                    intent.putExtra("EXPENSE_DATE", expense.date)
+                    intent.putExtra("EXPENSE_NOTES", expense.notes)
                     startActivity(intent)
                 }
 
@@ -80,9 +96,7 @@ class DashboardFragment : Fragment() {
         val totalBudget = budgets.sumOf { it.amount.replace("₱", "").replace("P", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
         val totalSpent = activities.sumOf { it.amount.replace("₱", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
         
-        view.findViewById<TextView>(R.id.tv_total_budget).text = "₱$totalBudget"
-        view.findViewById<TextView>(R.id.tv_remaining).text = "₱${totalBudget - totalSpent}"
-
-        return view
+        tvTotalBudget.text = "₱$totalBudget"
+        tvRemaining.text = "₱${totalBudget - totalSpent}"
     }
 }

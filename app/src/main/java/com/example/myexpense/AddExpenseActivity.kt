@@ -1,20 +1,28 @@
 package com.example.myexpense
 
+import android.app.DatePickerDialog
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class AddExpenseActivity : AppCompatActivity() {
 
     private lateinit var db: DatabaseHelper
     private lateinit var session: SessionManager
+    private var selectedDate: Calendar = Calendar.getInstance()
+    private val dateFormat = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,10 +31,32 @@ class AddExpenseActivity : AppCompatActivity() {
         db = DatabaseHelper(this)
         session = SessionManager(this)
 
+        val tvDate = findViewById<TextView>(R.id.tv_date)
         val etCategory = findViewById<AutoCompleteTextView>(R.id.et_category)
         val etDescription = findViewById<EditText>(R.id.et_description)
         val etAmount = findViewById<EditText>(R.id.et_amount)
         val etPayment = findViewById<EditText>(R.id.et_payment_method)
+        val etNotes = findViewById<EditText>(R.id.et_notes)
+        val ivCalendar = findViewById<ImageView>(R.id.iv_calendar)
+
+        // Set current date by default
+        tvDate.text = dateFormat.format(selectedDate.time)
+
+        // Date Picker
+        val dateClickListener = View.OnClickListener {
+            DatePickerDialog(
+                this,
+                { _, year, month, dayOfMonth ->
+                    selectedDate.set(year, month, dayOfMonth)
+                    tvDate.text = dateFormat.format(selectedDate.time)
+                },
+                selectedDate.get(Calendar.YEAR),
+                selectedDate.get(Calendar.MONTH),
+                selectedDate.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+        tvDate.setOnClickListener(dateClickListener)
+        ivCalendar?.setOnClickListener(dateClickListener)
 
         // Populate Category Selection
         val userId = session.getUserId()
@@ -47,13 +77,15 @@ class AddExpenseActivity : AppCompatActivity() {
             val category = etCategory.text.toString()
             val description = etDescription.text.toString()
             val amountStr = etAmount.text.toString()
+            val notes = etNotes.text.toString()
 
             if (category.isNotEmpty() && description.isNotEmpty() && amountStr.isNotEmpty()) {
                 val expense = Expense(
                     name = description,
-                    date = "April 9, 2026", // You can update this to use a real date picker later
+                    date = tvDate.text.toString(),
                     category = category,
-                    amount = "₱$amountStr"
+                    amount = "₱$amountStr",
+                    notes = notes
                 )
                 
                 if (db.addExpense(userId, expense)) {

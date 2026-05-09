@@ -102,52 +102,22 @@
                 android:lineSpacingMultiplier="1.2" />
         </LinearLayout>
 
-        <!-- List View -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_expense_list"
+        <!-- Dynamic Month Cards Container -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_expense_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp">
+            android:layout_marginEnd="24dp">
 
             <LinearLayout
+                android:id="@+id/ll_month_cards_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="24dp" />
+        </androidx.core.widget.NestedScrollView>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="April 2026"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total: ₱4,000.00"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary" />
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_expenses"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:overScrollMode="never" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
     </FrameLayout>
 
     <Button

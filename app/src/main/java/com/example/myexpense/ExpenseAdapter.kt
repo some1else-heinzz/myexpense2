@@ -32,14 +32,16 @@ class ExpenseAdapter(private val expenses: List<Expense>) :
         holder.tvCategory.text = expense.category
         holder.tvAmount.text = expense.amount
 
-        // Pass ID and details to edit screen
+        // Pass ID and details to details screen
         holder.row.setOnClickListener {
             val context = holder.itemView.context
-            val intent = Intent(context, EditExpenseActivity::class.java)
+            val intent = Intent(context, ExpenseDetailsActivity::class.java)
             intent.putExtra("EXPENSE_ID", expense.id)
             intent.putExtra("EXPENSE_NAME", expense.name)
             intent.putExtra("EXPENSE_AMOUNT", expense.amount)
             intent.putExtra("EXPENSE_CATEGORY", expense.category)
+            intent.putExtra("EXPENSE_DATE", expense.date)
+            intent.putExtra("EXPENSE_NOTES", expense.notes)
             context.startActivity(intent)
         }
 

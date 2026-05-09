@@ -9,7 +9,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "MyExpense.db"
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 3
 
         // Users table
         private const val TABLE_USERS = "users"
@@ -26,6 +26,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val COLUMN_EXP_DATE = "date"
         private const val COLUMN_EXP_CATEGORY = "category"
         private const val COLUMN_EXP_AMOUNT = "amount"
+        private const val COLUMN_EXP_NOTES = "notes"
 
         // Budgets table
         private const val TABLE_BUDGETS = "budgets"
@@ -43,7 +44,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("CREATE TABLE $TABLE_USERS($COLUMN_USER_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_USERNAME TEXT UNIQUE, $COLUMN_FULLNAME TEXT, $COLUMN_PASSWORD TEXT)")
-        db.execSQL("CREATE TABLE $TABLE_EXPENSES($COLUMN_EXP_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_EXP_USER_ID INTEGER, $COLUMN_EXP_NAME TEXT, $COLUMN_EXP_DATE TEXT, $COLUMN_EXP_CATEGORY TEXT, $COLUMN_EXP_AMOUNT TEXT)")
+        db.execSQL("CREATE TABLE $TABLE_EXPENSES($COLUMN_EXP_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_EXP_USER_ID INTEGER, $COLUMN_EXP_NAME TEXT, $COLUMN_EXP_DATE TEXT, $COLUMN_EXP_CATEGORY TEXT, $COLUMN_EXP_AMOUNT TEXT, $COLUMN_EXP_NOTES TEXT)")
         db.execSQL("CREATE TABLE $TABLE_BUDGETS($COLUMN_BUD_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_BUD_USER_ID INTEGER, $COLUMN_BUD_CATEGORY TEXT, $COLUMN_BUD_AMOUNT TEXT)")
         db.execSQL("CREATE TABLE $TABLE_CATEGORIES($COLUMN_CAT_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_CAT_USER_ID INTEGER, $COLUMN_CAT_NAME TEXT)")
     }
@@ -51,6 +52,21 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 2) {
             db.execSQL("CREATE TABLE $TABLE_CATEGORIES($COLUMN_CAT_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_CAT_USER_ID INTEGER, $COLUMN_CAT_NAME TEXT)")
+        }
+        if (oldVersion < 3) {
+            // Check if column exists before adding to prevent crashes if migration was partially done
+            val cursor = db.rawQuery("PRAGMA table_info($TABLE_EXPENSES)", null)
+            var columnExists = false
+            while (cursor.moveToNext()) {
+                if (cursor.getString(1) == COLUMN_EXP_NOTES) {
+                    columnExists = true
+                    break
+                }
+            }
+            cursor.close()
+            if (!columnExists) {
+                db.execSQL("ALTER TABLE $TABLE_EXPENSES ADD COLUMN $COLUMN_EXP_NOTES TEXT DEFAULT ''")
+            }
         }
     }
 
@@ -160,6 +176,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         values.put(COLUMN_EXP_DATE, expense.date)
         values.put(COLUMN_EXP_CATEGORY, expense.category)
         values.put(COLUMN_EXP_AMOUNT, expense.amount)
+        values.put(COLUMN_EXP_NOTES, expense.notes)
         val success = db.insert(TABLE_EXPENSES, null, values)
         db.close()
         return success != -1L
@@ -169,8 +186,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(COLUMN_EXP_NAME, expense.name)
+        values.put(COLUMN_EXP_DATE, expense.date)
         values.put(COLUMN_EXP_CATEGORY, expense.category)
         values.put(COLUMN_EXP_AMOUNT, expense.amount)
+        values.put(COLUMN_EXP_NOTES, expense.notes)
         val success = db.update(TABLE_EXPENSES, values, "$COLUMN_EXP_ID=? AND $COLUMN_EXP_USER_ID=?", arrayOf(expense.id.toString(), userId.toString()))
         db.close()
         return success > 0
@@ -194,10 +213,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             do {
                 list.add(Expense(
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EXP_ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXP_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXP_DATE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXP_CATEGORY)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXP_AMOUNT))
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXP_NAME)) ?: "",
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXP_DATE)) ?: "",
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXP_CATEGORY)) ?: "",
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXP_AMOUNT)) ?: "",
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXP_NOTES)) ?: ""
                 ))
             } while (cursor.moveToNext())
         }
