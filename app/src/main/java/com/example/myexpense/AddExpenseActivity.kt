@@ -2,23 +2,58 @@ package com.example.myexpense
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class AddExpenseActivity : AppCompatActivity() {
+
+    private lateinit var db: DatabaseHelper
+    private lateinit var session: SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expense)
+
+        db = DatabaseHelper(this)
+        session = SessionManager(this)
+
+        val etCategory = findViewById<EditText>(R.id.et_category)
+        val etDescription = findViewById<EditText>(R.id.et_description)
+        val etAmount = findViewById<EditText>(R.id.et_amount)
+        val etPayment = findViewById<EditText>(R.id.et_payment_method)
 
         findViewById<ImageView>(R.id.iv_back).setOnClickListener {
             showDiscardDialog()
         }
 
         findViewById<Button>(R.id.btn_save_expense).setOnClickListener {
-            // Logic to save expense would go here
-            finish()
+            val category = etCategory.text.toString()
+            val description = etDescription.text.toString()
+            val amountStr = etAmount.text.toString()
+            val payment = etPayment.text.toString()
+
+            if (category.isNotEmpty() && description.isNotEmpty() && amountStr.isNotEmpty()) {
+                val expense = Expense(
+                    name = description,
+                    date = "April 9, 2026", // Mock date for now
+                    category = category,
+                    amount = "₱$amountStr"
+                )
+                
+                val userId = session.getUserId()
+                if (db.addExpense(userId, expense)) {
+                    Toast.makeText(this, "Expense saved", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Toast.makeText(this, "Failed to save expense", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Please fill required fields", Toast.LENGTH_SHORT).show()
+            }
         }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {

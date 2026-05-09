@@ -9,9 +9,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var db: DatabaseHelper
+    private lateinit var session: SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        db = DatabaseHelper(this)
+        session = SessionManager(this)
 
         val etUsername = findViewById<EditText>(R.id.et_username)
         val etPassword = findViewById<EditText>(R.id.et_password)
@@ -20,10 +27,18 @@ class LoginActivity : AppCompatActivity() {
 
         btnLogin.setOnClickListener {
             if (validateInputs(etUsername, etPassword)) {
-                // For now, any non-empty input is "valid" login
-                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, DashboardActivity::class.java))
-                finish()
+                val username = etUsername.text.toString().trim()
+                val password = etPassword.text.toString()
+
+                val user = db.checkUser(username, password)
+                if (user != null) {
+                    session.createSession(user)
+                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, DashboardActivity::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -46,9 +61,6 @@ class LoginActivity : AppCompatActivity() {
 
         if (password.isEmpty()) {
             etPassword.error = getString(R.string.error_field_required)
-            isValid = false
-        } else if (password.length < 6) {
-            etPassword.error = getString(R.string.error_password_too_short)
             isValid = false
         }
 

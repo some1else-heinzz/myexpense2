@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,12 +38,23 @@ class CategoriesActivity : AppCompatActivity() {
                 startActivity(intent)
             },
             onDeleteClick = { category ->
-                // Delete logic
+                showDeleteConfirmationDialog(category)
             }
         )
 
         findViewById<Button>(R.id.btn_add_category).setOnClickListener {
             startActivity(Intent(this, AddCategoryActivity::class.java))
         }
+    }
+
+    private fun showDeleteConfirmationDialog(category: Category) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Category")
+            .setMessage("Are you sure you want to delete this category?")
+            .setPositiveButton("Confirm") { _, _ ->
+                // Actual delete logic would go here
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 }

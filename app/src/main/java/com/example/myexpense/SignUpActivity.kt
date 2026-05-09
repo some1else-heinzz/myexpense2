@@ -10,12 +10,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class SignUpActivity : AppCompatActivity() {
+
+    private lateinit var db: DatabaseHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
+        db = DatabaseHelper(this)
+
         val etFullName = findViewById<EditText>(R.id.et_full_name)
-        val etEmail = findViewById<EditText>(R.id.et_email)
+        val etEmail = findViewById<EditText>(R.id.et_email) // Note: using email as username
         val etPassword = findViewById<EditText>(R.id.et_password)
         val etConfirmPassword = findViewById<EditText>(R.id.et_confirm_password)
         val btnCreateAccount = findViewById<Button>(R.id.btn_create_account)
@@ -23,10 +28,20 @@ class SignUpActivity : AppCompatActivity() {
 
         btnCreateAccount.setOnClickListener {
             if (validateInputs(etFullName, etEmail, etPassword, etConfirmPassword)) {
-                // If validation passes, proceed to log in
-                Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
+                val fullName = etFullName.text.toString().trim()
+                val email = etEmail.text.toString().trim()
+                val password = etPassword.text.toString()
+
+                val newUser = User(username = email, fullName = fullName, password = password)
+                val success = db.addUser(newUser)
+
+                if (success) {
+                    Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Registration failed. Username might exist.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
