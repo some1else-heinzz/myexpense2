@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- activity_signup.xml -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -23,8 +24,7 @@
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:src="@drawable/my_expense_logo
-"
+                android:src="@drawable/my_expense_logo"
                 android:contentDescription="Logo" />
 
             <LinearLayout
@@ -88,6 +88,9 @@
             android:background="@drawable/bg_input_field"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
+            android:drawableStart="@drawable/ic_person"
+            android:drawablePadding="12dp"
+            android:drawableTint="@color/text_secondary"
             android:inputType="textPersonName"
             android:layout_marginBottom="14dp" />
 
@@ -111,6 +114,9 @@
             android:background="@drawable/bg_input_field"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
+            android:drawableStart="@drawable/ic_email"
+            android:drawablePadding="12dp"
+            android:drawableTint="@color/text_secondary"
             android:inputType="textEmailAddress"
             android:layout_marginBottom="14dp" />
 
@@ -134,7 +140,18 @@
             android:background="@drawable/bg_input_field"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawablePadding="12dp"
+            android:drawableTint="@color/text_secondary"
             android:inputType="textPassword"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/error_password_too_short"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
             android:layout_marginBottom="14dp" />
 
         <!-- Confirm Password -->
@@ -147,18 +164,37 @@
             android:textColor="@color/text_primary"
             android:layout_marginBottom="6dp" />
 
-        <EditText
-            android:id="@+id/et_confirm_password"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:hint="@string/confirm_password_hint"
-            android:textSize="14sp"
-            android:textColorHint="@color/text_hint"
-            android:background="@drawable/bg_input_field"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:inputType="textPassword"
-            android:layout_marginBottom="24dp" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp">
+
+            <EditText
+                android:id="@+id/et_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:hint="@string/confirm_password_hint"
+                android:textSize="14sp"
+                android:textColorHint="@color/text_hint"
+                android:background="@drawable/bg_input_field"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:drawableStart="@drawable/ic_lock"
+                android:drawablePadding="12dp"
+                android:drawableTint="@color/text_secondary"
+                android:inputType="textPassword" />
+
+            <ImageView
+                android:id="@+id/iv_password_match"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="44dp"
+                android:src="@drawable/ic_check_circle"
+                android:contentDescription="Password Match"
+                android:visibility="gone"
+                app:tint="@color/green_primary" />
+        </FrameLayout>
 
         <!-- Create Account Button -->
         <Button
@@ -171,48 +207,6 @@
             android:backgroundTint="@color/green_btn"
             android:layout_marginBottom="16dp" />
 
-        <!-- Divider "or continue with" -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/divider" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/or_continue_with"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/divider" />
-        </LinearLayout>
-
-        <!-- Google button -->
-        <Button
-            android:id="@+id/btn_google"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:text="@string/continue_google"
-            android:textSize="14sp"
-            android:textColor="@color/text_primary"
-            android:backgroundTint="@color/white"
-            android:drawableStart="@drawable/ic_google"
-            android:drawablePadding="10dp"
-            android:layout_marginBottom="16dp" />
 
         <!-- Login Link -->
         <TextView

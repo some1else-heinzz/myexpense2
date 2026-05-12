@@ -3,8 +3,12 @@ package com.example.myexpense
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +29,25 @@ class SignUpActivity : AppCompatActivity() {
         val etConfirmPassword = findViewById<EditText>(R.id.et_confirm_password)
         val btnCreateAccount = findViewById<Button>(R.id.btn_create_account)
         val tvLoginLink = findViewById<TextView>(R.id.tv_login_link)
+        val ivPasswordMatch = findViewById<ImageView>(R.id.iv_password_match)
+
+        val passwordWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val password = etPassword.text.toString()
+                val confirmPassword = etConfirmPassword.text.toString()
+                
+                if (confirmPassword.isNotEmpty() && password == confirmPassword) {
+                    ivPasswordMatch.visibility = View.VISIBLE
+                } else {
+                    ivPasswordMatch.visibility = View.GONE
+                }
+            }
+        }
+
+        etPassword.addTextChangedListener(passwordWatcher)
+        etConfirmPassword.addTextChangedListener(passwordWatcher)
 
         btnCreateAccount.setOnClickListener {
             if (validateInputs(etFullName, etEmail, etPassword, etConfirmPassword)) {
