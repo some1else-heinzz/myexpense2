@@ -38,15 +38,15 @@ class BudgetAdapter(
         val spentAmount = expenseTotals[budget.category] ?: 0.0
         
         holder.tvName.text = budget.category
-        holder.tvAmount.text = "$currency${String.format(Locale.getDefault(), "%,.0f", budgetAmount)}"
+        holder.tvAmount.text = "$currency${String.format(Locale.getDefault(), "%,.2f", budgetAmount)}"
         
         // Progress Bar
         val progress = if (budgetAmount > 0) ((spentAmount / budgetAmount) * 100).toInt() else 0
         holder.pbBudget.progress = progress.coerceAtMost(100)
         
         // Status Text
-        val spentFormatted = String.format(Locale.getDefault(), "$currency%,.0f", spentAmount)
-        val totalFormatted = String.format(Locale.getDefault(), "$currency%,.0f", budgetAmount)
+        val spentFormatted = String.format(Locale.getDefault(), "$currency%,.2f", spentAmount)
+        val totalFormatted = String.format(Locale.getDefault(), "$currency%,.2f", budgetAmount)
         holder.tvStatus.text = "$spentFormatted spent of $totalFormatted"
         
         // Color coding for progress

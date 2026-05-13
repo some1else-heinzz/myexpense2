@@ -64,7 +64,7 @@ class BudgetFragment : Fragment() {
             }
 
             val totalBudget = budgets.sumOf { it.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace("P", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
-            tvTotalBudget.text = "$currency${String.format(Locale.getDefault(), "%,.1f", totalBudget)}"
+            tvTotalBudget.text = "$currency${String.format(Locale.getDefault(), "%,.2f", totalBudget)}"
 
             // Add "Unbudgeted" section if there are expenses in categories without a budget
             val budgetedCategories = budgets.map { it.category }.toSet()
@@ -87,6 +87,15 @@ class BudgetFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        loadBudgetData()
+        if (!isHidden) {
+            loadBudgetData()
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            loadBudgetData()
+        }
     }
 }

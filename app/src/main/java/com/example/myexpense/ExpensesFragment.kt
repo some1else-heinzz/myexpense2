@@ -183,7 +183,7 @@ class ExpensesFragment : Fragment() {
                     }
                     rowView.findViewById<TextView>(R.id.tv_expense_date).text = displayDate
                     rowView.findViewById<TextView>(R.id.tv_expense_category).text = expense.category
-                    rowView.findViewById<TextView>(R.id.tv_expense_amount).text = "$currency${String.format(Locale.getDefault(), "%,.0f", amount)}"
+                    rowView.findViewById<TextView>(R.id.tv_expense_amount).text = "$currency${String.format(Locale.getDefault(), "%,.2f", amount)}"
                     
                     val catInfo = categories[expense.category]
                     if (catInfo != null) {
@@ -230,7 +230,17 @@ class ExpensesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        setupCategoryChips()
-        loadExpenses()
+        if (!isHidden) {
+            setupCategoryChips()
+            loadExpenses()
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            setupCategoryChips()
+            loadExpenses()
+        }
     }
 }

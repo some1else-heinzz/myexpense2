@@ -73,14 +73,25 @@ class DashboardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        loadDashboardData()
+        if (!isHidden) {
+            loadDashboardData()
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            loadDashboardData()
+        }
     }
 
     private fun loadDashboardData() {
+        val userId = session.getUserId()
+        if (userId == -1) return
+
         val fullName = session.getFullName() ?: "User"
         tvWelcome.text = "Welcome back, $fullName"
 
-        val userId = session.getUserId()
         val currency = session.getCurrency()
         
         // Process any recurring expenses for this month
@@ -94,32 +105,34 @@ class DashboardFragment : Fragment() {
         val legacyFormat = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
 
         // Load Favorites (Quick Add)
-        containerFavorites.removeAllViews()
-        if (templates.isEmpty()) {
-            hsvFavorites.visibility = View.GONE
-            tvFavoritesLabel.visibility = View.GONE
-        } else {
-            hsvFavorites.visibility = View.VISIBLE
-            tvFavoritesLabel.visibility = View.VISIBLE
-            for (temp in templates) {
-                val favView = layoutInflater.inflate(R.layout.item_favorite, containerFavorites, false)
-                favView.findViewById<TextView>(R.id.tv_fav_name).text = temp.first
-                favView.findViewById<TextView>(R.id.tv_fav_amount).text = temp.third
-                
-                favView.setOnClickListener {
-                    val newExpense = Expense(
-                        name = temp.first,
-                        category = temp.second,
-                        amount = temp.third,
-                        date = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Calendar.getInstance().time),
-                        notes = "Quick add from favorites"
-                    )
-                    if (db.addExpense(userId, newExpense)) {
-                        Toast.makeText(requireContext(), "Quick Add: ${temp.first} saved!", Toast.LENGTH_SHORT).show()
-                        loadDashboardData() // Refresh
+        if (containerFavorites.childCount != templates.size) {
+            containerFavorites.removeAllViews()
+            if (templates.isEmpty()) {
+                hsvFavorites.visibility = View.GONE
+                tvFavoritesLabel.visibility = View.GONE
+            } else {
+                hsvFavorites.visibility = View.VISIBLE
+                tvFavoritesLabel.visibility = View.VISIBLE
+                for (temp in templates) {
+                    val favView = layoutInflater.inflate(R.layout.item_favorite, containerFavorites, false)
+                    favView.findViewById<TextView>(R.id.tv_fav_name).text = temp.first
+                    favView.findViewById<TextView>(R.id.tv_fav_amount).text = temp.third
+                    
+                    favView.setOnClickListener {
+                        val newExpense = Expense(
+                            name = temp.first,
+                            category = temp.second,
+                            amount = temp.third,
+                            date = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Calendar.getInstance().time),
+                            notes = "Quick add from favorites"
+                        )
+                        if (db.addExpense(userId, newExpense)) {
+                            Toast.makeText(requireContext(), "Quick Add: ${temp.first} saved!", Toast.LENGTH_SHORT).show()
+                            loadDashboardData() // Refresh
+                        }
                     }
+                    containerFavorites.addView(favView)
                 }
-                containerFavorites.addView(favView)
             }
         }
 
@@ -145,7 +158,7 @@ class DashboardFragment : Fragment() {
                 rowView.findViewById<TextView>(R.id.tv_expense_category).text = expense.category
                 
                 val amount = expense.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace(",", "").toDoubleOrNull() ?: 0.0
-                rowView.findViewById<TextView>(R.id.tv_expense_amount).text = "$currency${String.format(Locale.getDefault(), "%,.0f", amount)}"
+                rowView.findViewById<TextView>(R.id.tv_expense_amount).text = "$currency${String.format(Locale.getDefault(), "%,.2f", amount)}"
                 
                 val catInfo = categories[expense.category]
                 if (catInfo != null) {
@@ -193,8 +206,8 @@ class DashboardFragment : Fragment() {
             it.date.contains(SimpleDateFormat("yyyy", Locale.getDefault()).format(Calendar.getInstance().time))
         }.sumOf { it.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
         
-        tvTotalBudget.text = "$currency${String.format(Locale.getDefault(), "%,.1f", totalBudget)}"
-        tvRemaining.text = "$currency${String.format(Locale.getDefault(), "%,.1f", totalBudget - totalSpent)}"
+        tvTotalBudget.text = "$currency${String.format(Locale.getDefault(), "%,.2f", totalBudget)}"
+        tvRemaining.text = "$currency${String.format(Locale.getDefault(), "%,.2f", totalBudget - totalSpent)}"
 
         if (totalBudget - totalSpent < 0) {
             tvRemaining.setTextColor(requireContext().getColor(R.color.red_delete))
