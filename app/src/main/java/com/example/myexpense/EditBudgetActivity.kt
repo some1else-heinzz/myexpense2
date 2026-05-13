@@ -6,6 +6,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
@@ -25,7 +26,11 @@ class EditBudgetActivity : AppCompatActivity() {
         session = SessionManager(this)
 
         val etCategory = findViewById<AutoCompleteTextView>(R.id.et_category)
+        val tvCurrencySymbol = findViewById<TextView>(R.id.tv_currency_symbol)
         val etAmount = findViewById<EditText>(R.id.et_budget_amount)
+
+        // Set current currency
+        tvCurrencySymbol.text = session.getCurrency()
 
         budgetId = intent.getIntExtra("BUDGET_ID", -1)
         val oldCategory = intent.getStringExtra("BUDGET_CATEGORY")
@@ -53,14 +58,22 @@ class EditBudgetActivity : AppCompatActivity() {
             val amountStr = etAmount.text.toString()
 
             if (category.isNotEmpty() && amountStr.isNotEmpty()) {
+                val currency = session.getCurrency()
                 val budget = Budget(
                     id = budgetId,
                     category = category,
-                    amount = "₱$amountStr"
+                    amount = "$currency$amountStr"
                 )
                 
                 if (db.updateBudget(userId, budget)) {
-                    Toast.makeText(this, "Budget updated", Toast.LENGTH_SHORT).show()
+                    // Sync category
+                    val existingCategories = db.getCategories(userId)
+                    if (existingCategories.none { it.name.equals(category, ignoreCase = true) }) {
+                        db.addCategory(userId, Category(category, "ic_others", "#9E9E9E"))
+                        Toast.makeText(this, "Budget updated and Category created", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Budget updated", Toast.LENGTH_SHORT).show()
+                    }
                     finish()
                 } else {
                     Toast.makeText(this, "Update failed", Toast.LENGTH_SHORT).show()

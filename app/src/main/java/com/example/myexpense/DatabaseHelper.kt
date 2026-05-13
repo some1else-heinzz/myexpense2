@@ -489,11 +489,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     fun addRecurring(userId: Int, name: String, category: String, amount: String): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
+        
+        // Mark as added for the current month so it doesn't double-add immediately
+        val currentMonth = SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
+        
         values.put(COLUMN_REC_USER_ID, userId)
         values.put(COLUMN_REC_NAME, name)
         values.put(COLUMN_REC_CATEGORY, category)
         values.put(COLUMN_REC_AMOUNT, amount)
-        values.put(COLUMN_REC_LAST_ADDED_MONTH, "") // Empty initially
+        values.put(COLUMN_REC_LAST_ADDED_MONTH, currentMonth) 
+
         val success = db.insert(TABLE_RECURRING, null, values)
         db.close()
         return success != -1L

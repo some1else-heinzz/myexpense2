@@ -33,7 +33,13 @@ class AddExpenseActivity : AppCompatActivity() {
         session = SessionManager(this)
 
         val tvDate = findViewById<TextView>(R.id.tv_date)
+        val llDateContainer = findViewById<View>(R.id.ll_date_container)
+        val tvCurrencySymbol = findViewById<TextView>(R.id.tv_currency_symbol)
         val etCategory = findViewById<AutoCompleteTextView>(R.id.et_category)
+
+        // Set current currency symbol
+        tvCurrencySymbol.text = session.getCurrency()
+
         val etDescription = findViewById<EditText>(R.id.et_description)
         val etAmount = findViewById<EditText>(R.id.et_amount)
         val etNotes = findViewById<EditText>(R.id.et_notes)
@@ -58,6 +64,7 @@ class AddExpenseActivity : AppCompatActivity() {
             ).show()
         }
         tvDate.setOnClickListener(dateClickListener)
+        llDateContainer.setOnClickListener(dateClickListener)
         ivCalendar?.setOnClickListener(dateClickListener)
 
         // Populate Category Selection
@@ -81,23 +88,24 @@ class AddExpenseActivity : AppCompatActivity() {
             val notes = etNotes.text.toString()
 
             if (category.isNotEmpty() && description.isNotEmpty() && amountStr.isNotEmpty()) {
+                val currency = session.getCurrency()
                 val expense = Expense(
                     name = description,
                     date = tvDate.text.toString(),
                     category = category,
-                    amount = "₱$amountStr",
+                    amount = "$currency$amountStr",
                     notes = notes
                 )
                 
                 if (db.addExpense(userId, expense)) {
                     // Save as Favorite if toggled
                     if (swFavorite.isChecked) {
-                        db.addTemplate(userId, description, category, "₱$amountStr")
+                        db.addTemplate(userId, description, category, "$currency$amountStr")
                     }
 
                     // Save as Recurring if toggled
                     if (swRecurring.isChecked) {
-                        db.addRecurring(userId, description, category, "₱$amountStr")
+                        db.addRecurring(userId, description, category, "$currency$amountStr")
                     }
 
                     Toast.makeText(this, "Expense saved", Toast.LENGTH_SHORT).show()
@@ -120,13 +128,13 @@ class AddExpenseActivity : AppCompatActivity() {
 
     private fun checkBudgetThreshold(userId: Int, category: String) {
         val budget = db.getBudgets(userId).find { it.category == category } ?: return
-        val budgetAmount = budget.amount.replace("₱", "").replace("P", "").replace(",", "").toDoubleOrNull() ?: 0.0
+        val budgetAmount = budget.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace("P", "").replace(",", "").toDoubleOrNull() ?: 0.0
         if (budgetAmount <= 0) return
 
         val currentMonth = SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
         val allExpenses = db.getExpenses(userId, category)
         val monthSpent = allExpenses.filter { it.date.contains(currentMonth.split(" ")[0]) && it.date.contains(currentMonth.split(" ")[1]) }
-            .sumOf { it.amount.replace("₱", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
+            .sumOf { it.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
 
         val ratio = monthSpent / budgetAmount
         if (ratio >= 1.0) {

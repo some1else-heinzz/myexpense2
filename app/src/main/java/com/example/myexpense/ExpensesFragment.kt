@@ -163,12 +163,13 @@ class ExpensesFragment : Fragment() {
                 val tvMonthHeader = monthCardView.findViewById<TextView>(R.id.tv_month_header)
                 val tvMonthTotal = monthCardView.findViewById<TextView>(R.id.tv_month_total)
                 val llItemsContainer = monthCardView.findViewById<LinearLayout>(R.id.ll_expense_items_container)
+                val currency = session.getCurrency()
 
                 tvMonthHeader.text = monthYear
                 
                 var totalAmount = 0.0
                 monthExpenses.forEachIndexed { index, expense ->
-                    val amount = expense.amount.replace("₱", "").replace(",", "").toDoubleOrNull() ?: 0.0
+                    val amount = expense.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace(",", "").toDoubleOrNull() ?: 0.0
                     totalAmount += amount
 
                     val rowView = layoutInflater.inflate(R.layout.item_expense, llItemsContainer, false)
@@ -182,7 +183,7 @@ class ExpensesFragment : Fragment() {
                     }
                     rowView.findViewById<TextView>(R.id.tv_expense_date).text = displayDate
                     rowView.findViewById<TextView>(R.id.tv_expense_category).text = expense.category
-                    rowView.findViewById<TextView>(R.id.tv_expense_amount).text = expense.amount
+                    rowView.findViewById<TextView>(R.id.tv_expense_amount).text = "$currency${String.format(Locale.getDefault(), "%,.0f", amount)}"
                     
                     val catInfo = categories[expense.category]
                     if (catInfo != null) {
@@ -221,7 +222,7 @@ class ExpensesFragment : Fragment() {
                     llItemsContainer.addView(rowView)
                 }
 
-                tvMonthTotal.text = "Total: ₱${String.format(Locale.getDefault(), "%,.2f", totalAmount)}"
+                tvMonthTotal.text = "Total: $currency${String.format(Locale.getDefault(), "%,.2f", totalAmount)}"
                 llMonthCardsContainer.addView(monthCardView)
             }
         }

@@ -40,7 +40,9 @@ class ExpenseDetailsActivity : AppCompatActivity() {
         expenseNotes = intent.getStringExtra("EXPENSE_NOTES")
 
         // Display data
-        findViewById<TextView>(R.id.tv_detail_amount).text = expenseAmount
+        val currency = session.getCurrency()
+        val cleanedAmount = expenseAmount?.replace("₱", "")?.replace("$", "")?.replace("€", "")?.replace("£", "")?.replace("¥", "")?.replace(",", "") ?: "0.00"
+        findViewById<TextView>(R.id.tv_detail_amount).text = "$currency$cleanedAmount"
         findViewById<TextView>(R.id.tv_detail_name).text = expenseName
         findViewById<TextView>(R.id.tv_detail_date).text = expenseDate
         findViewById<TextView>(R.id.tv_detail_category).text = expenseCategory

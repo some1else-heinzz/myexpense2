@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Bottom Shadow -->
     <item>
         <shape>
-            <corners android:radius="18dp" />
-            <solid android:color="#0A000000" />
+            <corners android:radius="20dp" />
+            <solid android:color="#0D000000" />
         </shape>
     </item>
+    <!-- Card Surface -->
     <item android:bottom="2dp" android:left="1dp" android:right="1dp" android:top="1dp">
         <shape>
-            <corners android:radius="18dp" />
+            <corners android:radius="20dp" />
             <solid android:color="@color/white" />
         </shape>
     </item>

@@ -3,26 +3,53 @@
     android:id="@+id/ll_budget_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:layout_marginBottom="16dp"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@drawable/bg_budget_card">
+    android:padding="20dp"
+    android:background="@drawable/bg_card_modern">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_category_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Food"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary" />
+
+        <TextView
+            android:id="@+id/tv_category_budget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="₱2,500.00"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/green_primary" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_budget"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:progressDrawable="@drawable/budget_progress_bar"
+        android:progress="60" />
 
     <TextView
-        android:id="@+id/tv_category_name"
+        android:id="@+id/tv_budget_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Food"
-        android:textSize="16sp"
-        android:textColor="@color/text_primary" />
-
-    <TextView
-        android:id="@+id/tv_category_budget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="P2,500.00"
+        android:text="₱1,500 spent of ₱2,500"
         android:textSize="12sp"
-        android:textColor="@color/text_secondary"
-        android:layout_marginTop="4dp" />
+        android:textColor="@color/text_secondary" />
 
 </LinearLayout>

@@ -1,83 +1,67 @@
 package com.example.myexpense
 
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.util.Locale
 
-class BudgetAdapter(private val budgets: List<Budget>) :
-    RecyclerView.Adapter<BudgetAdapter.BudgetViewHolder>() {
-
-    private var categoryCache: Map<String, Category>? = null
+class BudgetAdapter(
+    private val budgets: List<Budget>,
+    private val expenseTotals: Map<String, Double>
+) : RecyclerView.Adapter<BudgetAdapter.BudgetViewHolder>() {
 
     class BudgetViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val row: View = view.findViewById(R.id.ll_expense_row)
-        val ivIcon: ImageView = view.findViewById(R.id.iv_expense_category_icon)
-        val flIconBg: FrameLayout = view.findViewById(R.id.fl_expense_icon_bg)
-        val tvName: TextView = view.findViewById(R.id.tv_expense_name)
-        val tvAmount: TextView = view.findViewById(R.id.tv_expense_amount)
-        val divider: View = view.findViewById(R.id.v_divider)
-        
-        init {
-             view.findViewById<TextView>(R.id.tv_expense_category).visibility = View.GONE
-             view.findViewById<TextView>(R.id.tv_expense_date).visibility = View.GONE
-        }
+        val tvName: TextView = view.findViewById(R.id.tv_category_name)
+        val tvAmount: TextView = view.findViewById(R.id.tv_category_budget)
+        val pbBudget: ProgressBar = view.findViewById(R.id.pb_budget)
+        val tvStatus: TextView = view.findViewById(R.id.tv_budget_status)
+        val container: View = view.findViewById(R.id.ll_budget_container)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BudgetViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_expense, parent, false)
+            .inflate(R.layout.item_budget, parent, false)
         return BudgetViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: BudgetViewHolder, position: Int) {
         val budget = budgets[position]
         val context = holder.itemView.context
+        val session = SessionManager(context)
+        val currency = session.getCurrency()
+        
+        val budgetAmount = budget.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace("P", "").replace(",", "").toDoubleOrNull() ?: 0.0
+        val spentAmount = expenseTotals[budget.category] ?: 0.0
         
         holder.tvName.text = budget.category
-        holder.tvAmount.text = budget.amount
-
-        // Load Category Info for Icon/Color
-        if (categoryCache == null) {
-            val db = DatabaseHelper(context)
-            val session = SessionManager(context)
-            categoryCache = db.getCategories(session.getUserId()).associateBy { it.name }
+        holder.tvAmount.text = "$currency${String.format(Locale.getDefault(), "%,.0f", budgetAmount)}"
+        
+        // Progress Bar
+        val progress = if (budgetAmount > 0) ((spentAmount / budgetAmount) * 100).toInt() else 0
+        holder.pbBudget.progress = progress.coerceAtMost(100)
+        
+        // Status Text
+        val spentFormatted = String.format(Locale.getDefault(), "$currency%,.0f", spentAmount)
+        val totalFormatted = String.format(Locale.getDefault(), "$currency%,.0f", budgetAmount)
+        holder.tvStatus.text = "$spentFormatted spent of $totalFormatted"
+        
+        // Color coding for progress
+        if (progress >= 90) {
+            holder.pbBudget.progressTintList = android.content.res.ColorStateList.valueOf(context.getColor(R.color.red_delete))
+        } else {
+            holder.pbBudget.progressTintList = null // Uses default from XML
         }
 
-        val category = categoryCache?.get(budget.category)
-        if (category != null) {
-            val resId = context.resources.getIdentifier(category.iconResName, "drawable", context.packageName)
-            if (resId != 0) holder.ivIcon.setImageResource(resId)
-            
-            try {
-                val color = Color.parseColor(category.colorHex)
-                holder.ivIcon.setColorFilter(color)
-                val alphaColor = Color.argb(30, Color.red(color), Color.green(color), Color.blue(color))
-                val shape = GradientDrawable()
-                shape.shape = GradientDrawable.OVAL
-                shape.setColor(alphaColor)
-                holder.flIconBg.background = shape
-            } catch (e: Exception) {}
-        }
-
-        holder.row.setOnClickListener {
+        holder.container.setOnClickListener {
             val intent = Intent(context, BudgetDetailsActivity::class.java)
             intent.putExtra("BUDGET_ID", budget.id)
             intent.putExtra("BUDGET_CATEGORY", budget.category)
             intent.putExtra("BUDGET_AMOUNT", budget.amount)
             context.startActivity(intent)
-        }
-
-        if (position == budgets.size - 1) {
-            holder.divider.visibility = View.GONE
-        } else {
-            holder.divider.visibility = View.VISIBLE
         }
     }
 

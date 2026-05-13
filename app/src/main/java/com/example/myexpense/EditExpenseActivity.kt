@@ -34,7 +34,13 @@ class EditExpenseActivity : AppCompatActivity() {
         session = SessionManager(this)
 
         val tvDate = findViewById<TextView>(R.id.tv_date)
+        val llDateContainer = findViewById<View>(R.id.ll_date_container)
+        val tvCurrencySymbol = findViewById<TextView>(R.id.tv_currency_symbol)
         val etCategory = findViewById<AutoCompleteTextView>(R.id.et_category)
+
+        // Set current currency symbol
+        tvCurrencySymbol.text = session.getCurrency()
+
         val etDescription = findViewById<EditText>(R.id.et_description)
         val etAmount = findViewById<EditText>(R.id.et_amount)
         val etNotes = findViewById<EditText>(R.id.et_notes)
@@ -54,6 +60,7 @@ class EditExpenseActivity : AppCompatActivity() {
             ).show()
         }
         tvDate.setOnClickListener(dateClickListener)
+        llDateContainer.setOnClickListener(dateClickListener)
         ivCalendar?.setOnClickListener(dateClickListener)
 
         // Populate Category Selection
@@ -102,12 +109,13 @@ class EditExpenseActivity : AppCompatActivity() {
             val notes = etNotes.text.toString()
 
             if (category.isNotEmpty() && description.isNotEmpty() && amountStr.isNotEmpty()) {
+                val currency = session.getCurrency()
                 val updatedExpense = Expense(
                     id = expenseId,
                     name = description,
                     date = tvDate.text.toString(),
                     category = category,
-                    amount = "₱$amountStr",
+                    amount = "$currency$amountStr",
                     notes = notes
                 )
                 

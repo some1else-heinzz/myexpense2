@@ -9,8 +9,10 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import java.util.Locale
 
 class MoreFragment : Fragment() {
 
@@ -27,6 +29,9 @@ class MoreFragment : Fragment() {
         val accountGroup = view.findViewById<LinearLayout>(R.id.ll_account_group)
         val manageGroup = view.findViewById<LinearLayout>(R.id.ll_manage_group)
         val prefGroup = view.findViewById<LinearLayout>(R.id.ll_preferences_group)
+        
+        // Ensure utility group exists or use manageGroup if not
+        val utilityGroup = view.findViewById<LinearLayout>(R.id.ll_utility_group) ?: manageGroup
 
         // Account Section
         addOption(accountGroup, R.drawable.ic_person, "Profile", "Edit name and password", isLast = true) {
@@ -43,8 +48,22 @@ class MoreFragment : Fragment() {
 
         // Preferences Section
         val currentFormat = session.getDateFormat()
-        addOption(prefGroup, R.drawable.ic_date, "Date Format", currentFormat, isLast = true) {
+        addOption(prefGroup, R.drawable.ic_date, "Date Format", currentFormat) {
             showDateFormatDialog()
+        }
+        
+        val currentCurrency = session.getCurrency()
+        addOption(prefGroup, R.drawable.ic_currency, "Currency Symbol", "Current: $currentCurrency", isLast = true) {
+            showCurrencyDialog()
+        }
+
+        // Utility Section (Summary & About)
+        addOption(utilityGroup, R.drawable.ic_expenses, "Spending Summary", "Generate a quick report") {
+            showSpendingSummary()
+        }
+        
+        addOption(utilityGroup, R.drawable.ic_about, "About MyExpense", "App information & support", isLast = true) {
+            showAboutDialog()
         }
 
         // Logout Button at the bottom
@@ -55,6 +74,61 @@ class MoreFragment : Fragment() {
         return view
     }
 
+    private fun showCurrencyDialog() {
+        val currencies = arrayOf("₱ (PHP)", "$ (USD)", "€ (EUR)", "£ (GBP)", "¥ (JPY)")
+        val symbols = arrayOf("₱", "$", "€", "£", "¥")
+        
+        AlertDialog.Builder(requireContext())
+            .setTitle("Choose Currency Symbol")
+            .setItems(currencies) { _, which ->
+                session.setCurrency(symbols[which])
+                refreshFragment()
+            }
+            .show()
+    }
+
+    private fun showSpendingSummary() {
+        val db = DatabaseHelper(requireContext())
+        val userId = session.getUserId()
+        val expenses = db.getExpenses(userId)
+        val currency = session.getCurrency()
+        
+        if (expenses.isEmpty()) {
+            Toast.makeText(requireContext(), "No data to summarize", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val total = expenses.sumOf { it.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
+        val topCategory = expenses.groupBy { it.category }.maxByOrNull { it.value.size }?.key ?: "N/A"
+        
+        val report = """
+            --- Spending Report ---
+            Total Expenses: $currency${String.format(Locale.getDefault(), "%,.2f", total)}
+            Transactions: ${expenses.size}
+            Top Category: $topCategory
+            -----------------------
+            Summary generated successfully.
+        """.trimIndent()
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Quick Summary")
+            .setMessage(report)
+            .setPositiveButton("Close", null)
+            .show()
+    }
+
+    private fun showAboutDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("About MyExpense")
+            .setMessage("MyExpense v1.0\n\nA modern, minimalist budget tracker designed to help you take control of your finances.\n\nDeveloped for Portfolio.")
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
+    private fun refreshFragment() {
+        parentFragmentManager.beginTransaction().replace(R.id.fragment_container, MoreFragment()).commit()
+    }
+
     private fun showDateFormatDialog() {
         val formats = arrayOf("MMMM d, yyyy", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd")
         
@@ -63,8 +137,7 @@ class MoreFragment : Fragment() {
             .setItems(formats) { _, which ->
                 val selectedFormat = formats[which]
                 session.setDateFormat(selectedFormat)
-                // Refresh the fragment to show new subtitle
-                parentFragmentManager.beginTransaction().replace(R.id.fragment_container, MoreFragment()).commit()
+                refreshFragment()
             }
             .show()
     }

@@ -29,6 +29,8 @@ class DashboardFragment : Fragment() {
     private lateinit var tvWelcome: TextView
     private lateinit var hsvFavorites: View
     private lateinit var tvFavoritesLabel: View
+    private lateinit var llEmptyStateRecent: View
+    private lateinit var cvRecentActivities: View
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +49,8 @@ class DashboardFragment : Fragment() {
         tvRemaining = view.findViewById(R.id.tv_remaining)
         hsvFavorites = view.findViewById(R.id.hsv_favorites)
         tvFavoritesLabel = view.findViewById(R.id.tv_favorites_label)
+        llEmptyStateRecent = view.findViewById(R.id.ll_empty_state_recent)
+        cvRecentActivities = view.findViewById(R.id.cv_recent_activities)
 
         view.findViewById<CardView>(R.id.card_add_expense).setOnClickListener {
             startActivity(Intent(requireContext(), AddExpenseActivity::class.java))
@@ -77,6 +81,7 @@ class DashboardFragment : Fragment() {
         tvWelcome.text = "Welcome back, $fullName"
 
         val userId = session.getUserId()
+        val currency = session.getCurrency()
         
         // Process any recurring expenses for this month
         db.processRecurring(userId)
@@ -120,12 +125,11 @@ class DashboardFragment : Fragment() {
 
         containerActivities.removeAllViews()
         if (activities.isEmpty()) {
-            val emptyText = TextView(requireContext())
-            emptyText.text = "No recent activities"
-            emptyText.setPadding(32, 32, 32, 32)
-            emptyText.gravity = android.view.Gravity.CENTER
-            containerActivities.addView(emptyText)
+            llEmptyStateRecent.visibility = View.VISIBLE
+            cvRecentActivities.visibility = View.GONE
         } else {
+            llEmptyStateRecent.visibility = View.GONE
+            cvRecentActivities.visibility = View.VISIBLE
             activities.take(4).forEachIndexed { index, expense ->
                 val rowView = layoutInflater.inflate(R.layout.item_expense, containerActivities, false)
                 rowView.findViewById<TextView>(R.id.tv_expense_name).text = expense.name
@@ -139,7 +143,9 @@ class DashboardFragment : Fragment() {
                 rowView.findViewById<TextView>(R.id.tv_expense_date).text = displayDate
                 
                 rowView.findViewById<TextView>(R.id.tv_expense_category).text = expense.category
-                rowView.findViewById<TextView>(R.id.tv_expense_amount).text = expense.amount
+                
+                val amount = expense.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace(",", "").toDoubleOrNull() ?: 0.0
+                rowView.findViewById<TextView>(R.id.tv_expense_amount).text = "$currency${String.format(Locale.getDefault(), "%,.0f", amount)}"
                 
                 val catInfo = categories[expense.category]
                 if (catInfo != null) {
@@ -180,13 +186,20 @@ class DashboardFragment : Fragment() {
         }
 
         val budgets = db.getBudgets(userId)
-        val totalBudget = budgets.sumOf { it.amount.replace("₱", "").replace("P", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
+        
+        val totalBudget = budgets.sumOf { it.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace("P", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
         val totalSpent = activities.filter { 
             it.date.contains(SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().time)) &&
             it.date.contains(SimpleDateFormat("yyyy", Locale.getDefault()).format(Calendar.getInstance().time))
-        }.sumOf { it.amount.replace("₱", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
+        }.sumOf { it.amount.replace("₱", "").replace("$", "").replace("€", "").replace("£", "").replace("¥", "").replace(",", "").toDoubleOrNull() ?: 0.0 }
         
-        tvTotalBudget.text = "₱${String.format(Locale.getDefault(), "%,.1f", totalBudget)}"
-        tvRemaining.text = "₱${String.format(Locale.getDefault(), "%,.1f", totalBudget - totalSpent)}"
+        tvTotalBudget.text = "$currency${String.format(Locale.getDefault(), "%,.1f", totalBudget)}"
+        tvRemaining.text = "$currency${String.format(Locale.getDefault(), "%,.1f", totalBudget - totalSpent)}"
+
+        if (totalBudget - totalSpent < 0) {
+            tvRemaining.setTextColor(requireContext().getColor(R.color.red_delete))
+        } else {
+            tvRemaining.setTextColor(requireContext().getColor(R.color.text_primary))
+        }
     }
 }

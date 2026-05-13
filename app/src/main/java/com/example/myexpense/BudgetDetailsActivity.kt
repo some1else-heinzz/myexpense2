@@ -31,7 +31,9 @@ class BudgetDetailsActivity : AppCompatActivity() {
         categoryName = intent.getStringExtra("BUDGET_CATEGORY")
         amount = intent.getStringExtra("BUDGET_AMOUNT")
 
-        findViewById<TextView>(R.id.tv_detail_amount).text = amount
+        val currency = session.getCurrency()
+        val cleanedAmount = amount?.replace("₱", "")?.replace("$", "")?.replace("€", "")?.replace("£", "")?.replace("¥", "")?.replace(",", "") ?: "0.00"
+        findViewById<TextView>(R.id.tv_detail_amount).text = "$currency$cleanedAmount"
         findViewById<TextView>(R.id.tv_detail_category).text = categoryName
 
         // Load Icon

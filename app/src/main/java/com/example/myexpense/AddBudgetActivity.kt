@@ -33,29 +33,40 @@ class AddBudgetActivity : AppCompatActivity() {
         session = SessionManager(this)
 
         val etCategory = findViewById<AutoCompleteTextView>(R.id.et_category)
+        val tvCurrencySymbol = findViewById<TextView>(R.id.tv_currency_symbol)
         val etAmount = findViewById<EditText>(R.id.et_budget_amount)
+
+        // Set current currency
+        tvCurrencySymbol.text = session.getCurrency()
+
         val tvStartDate = findViewById<TextView>(R.id.tv_start_date)
         val tvEndDate = findViewById<TextView>(R.id.tv_end_date)
+        val llStartDate = findViewById<View>(R.id.ll_start_date_container)
+        val llEndDate = findViewById<View>(R.id.ll_end_date_container)
 
         // Set default dates
         tvStartDate.text = dateFormat.format(startDate.time)
         tvEndDate.text = dateFormat.format(endDate.time)
 
         // Start Date Picker
-        tvStartDate.setOnClickListener {
+        val startPickerListener = View.OnClickListener {
             DatePickerDialog(this, { _, year, month, day ->
                 startDate.set(year, month, day)
                 tvStartDate.text = dateFormat.format(startDate.time)
             }, startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH)).show()
         }
+        tvStartDate.setOnClickListener(startPickerListener)
+        llStartDate.setOnClickListener(startPickerListener)
 
         // End Date Picker
-        tvEndDate.setOnClickListener {
+        val endPickerListener = View.OnClickListener {
             DatePickerDialog(this, { _, year, month, day ->
                 endDate.set(year, month, day)
                 tvEndDate.text = dateFormat.format(endDate.time)
             }, endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH)).show()
         }
+        tvEndDate.setOnClickListener(endPickerListener)
+        llEndDate.setOnClickListener(endPickerListener)
 
         // Populate Category Selection
         val userId = session.getUserId()
@@ -77,13 +88,21 @@ class AddBudgetActivity : AppCompatActivity() {
             val amountStr = etAmount.text.toString()
 
             if (category.isNotEmpty() && amountStr.isNotEmpty()) {
+                val currency = session.getCurrency()
                 val budget = Budget(
                     category = category,
-                    amount = "₱$amountStr"
+                    amount = "$currency$amountStr"
                 )
                 
                 if (db.addBudget(userId, budget)) {
-                    Toast.makeText(this, "Budget saved", Toast.LENGTH_SHORT).show()
+                    // Check if category exists, if not, create it
+                    val existingCategories = db.getCategories(userId)
+                    if (existingCategories.none { it.name.equals(category, ignoreCase = true) }) {
+                        db.addCategory(userId, Category(category, "ic_others", "#9E9E9E"))
+                        Toast.makeText(this, "Budget saved and Category '$category' created", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Budget saved", Toast.LENGTH_SHORT).show()
+                    }
                     finish()
                 } else {
                     Toast.makeText(this, "Failed to save budget", Toast.LENGTH_SHORT).show()

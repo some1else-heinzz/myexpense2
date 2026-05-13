@@ -13,8 +13,16 @@ class SessionManager(context: Context) {
         private const val KEY_FULLNAME = "fullname"
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
         private const val KEY_DATE_FORMAT = "date_format"
+        private const val KEY_CURRENCY = "currency"
         const val DEFAULT_DATE_FORMAT = "MMMM d, yyyy"
+        const val DEFAULT_CURRENCY = "₱"
     }
+
+    fun setCurrency(symbol: String) {
+        prefs.edit().putString(KEY_CURRENCY, symbol).apply()
+    }
+
+    fun getCurrency(): String = prefs.getString(KEY_CURRENCY, DEFAULT_CURRENCY) ?: DEFAULT_CURRENCY
 
     fun setDateFormat(format: String) {
         prefs.edit().putString(KEY_DATE_FORMAT, format).apply()
